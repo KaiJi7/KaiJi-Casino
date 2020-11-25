@@ -55,8 +55,6 @@ type BetInfo struct {
 	Response   float64            `json:"response,omitempty"`
 }
 
-func (b *BetInfo) GetResponse() float64 {
-	// TODO: get from db, make cache
-
-	return 0
+func (b *BetInfo) String() string {
+	return fmt.Sprintf("game id: %s, gamble type: %s, bet side: %s", b.GameId.Hex(), b.GambleType, b.BetSide)
 }
