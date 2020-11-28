@@ -43,3 +43,7 @@ func (c *client) CountGamblers(filter bson.M) int64 {
 	}
 	return count
 }
+
+func (c client) AppendHistory(gamblerName string, history []collection.GambleHistory) {
+
+}

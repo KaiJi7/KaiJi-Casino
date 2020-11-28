@@ -1,6 +1,7 @@
 package util
 
 import (
+	"bytes"
 	"encoding/binary"
 	"math"
 )
@@ -16,4 +17,19 @@ func Float64ToBytes(float float64) []byte {
 	bytes := make([]byte, 8)
 	binary.LittleEndian.PutUint64(bytes, bits)
 	return bytes
+}
+
+func BytesToStruct(b []byte) (i interface{}, err error) {
+	err = binary.Read(bytes.NewReader(b), binary.BigEndian, &i)
+	return
+}
+
+func StructToBytes(obj interface{}) (b []byte, err error) {
+	buf := &bytes.Buffer{}
+	err = binary.Write(buf, binary.BigEndian, obj)
+	if err != nil {
+		return
+	}
+	b = buf.Bytes()
+	return
 }

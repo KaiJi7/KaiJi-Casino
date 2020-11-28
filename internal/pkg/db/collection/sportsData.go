@@ -53,7 +53,7 @@ type SideBetInfo struct {
 		Guest float64 `json:"guest,omitempty" bson:"guest,omitempty"`
 		Host  float64 `json:"host,omitempty" bson:"host,omitempty"`
 	} `json:"response,omitempty" bson:"response,omitempty"`
-	Judgement  string `json:"judgement,omitempty" bson:"judgement,omitempty"`
+	Judgement  *string `json:"judgement,omitempty" bson:"judgement,omitempty"`
 	Prediction struct {
 		Guest *Vote `json:"guest,omitempty" bson:"guest,omitempty"`
 		Host  *Vote `json:"host,omitempty" bson:"host,omitempty"`

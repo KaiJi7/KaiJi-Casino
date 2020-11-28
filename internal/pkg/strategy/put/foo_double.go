@@ -29,8 +29,8 @@ func NewFooDouble() *fooDouble {
 func (f fooDouble) GetUnit(history []collection.GambleHistory) (unit int) {
 	log.Debug("get foo double put unit")
 	unit = 1
-	for _, h := range history {
-		if h.Win {
+	for i := len(history) - 1; i > 0; i-- {
+		if history[i].Win {
 			return
 		} else {
 			unit *= 2

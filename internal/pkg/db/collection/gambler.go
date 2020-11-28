@@ -31,8 +31,8 @@ type Strategy struct {
 type GambleHistory struct {
 	BetInfo       BetInfo `json:"bet_info"`
 	Win           bool    `json:"win"`
-	CapitalBefore int     `json:"capital_before"`
-	CapitalAfter  int     `json:"capital_after"`
+	CapitalBefore float64 `json:"capital_before"`
+	CapitalAfter  float64 `json:"capital_after"`
 }
 
 const (
