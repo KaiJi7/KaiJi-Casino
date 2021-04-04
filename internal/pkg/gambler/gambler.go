@@ -27,7 +27,7 @@ func (g Gambler) Battle(gambleInfo []collection.SportsData) {
 
 		isWin, err := banker.New().Battle(d)
 		if err != nil {
-			log.Errorf("fail to battle with banker: ", err.Error())
+			log.Error("fail to battle with banker: ", err.Error())
 			continue
 		}
 
