@@ -6,11 +6,11 @@ import (
 )
 
 const (
-	GAME_TYPE_NBA = "NBA"
-	GAME_TYPE_MLB = "MLB"
-	GAME_TYPE_NPB = "NPB"
+	GameTypeNba = "NBA"
+	GameTypeMlb = "MLB"
+	GameTypeNpb = "NPB"
 
-	GAME_TYPE_ALL = "all" // for banker query only
+	GameTypeAll = "all" // for banker query only
 )
 
 type GameType string

@@ -5,11 +5,21 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type N_Gambler struct {
+	Id           *primitive.ObjectID `json:"id"`
+	SimulationId *primitive.ObjectID `json:"simulation_id"`
+	Money        float64             `json:"money"`
+	StrategyId   *primitive.ObjectID `json:"strategy_id"`
+}
+
 type Gambler struct {
-	Name           string   `json:"name"`
-	InitCapital    int      `json:"init_capital"`
-	CurrentCapital int      `json:"current_capital"`
-	Strategy       Strategy `json:"strategy"`
+	Id             *primitive.ObjectID `json:"id"`
+	SimulationId   *primitive.ObjectID `json:"simulation_id"`
+	Name           string              `json:"name"`
+	Money          float64             `json:"money"`
+	InitCapital    int                 `json:"init_capital"`
+	CurrentCapital int                 `json:"current_capital"`
+	Strategy       Strategy            `json:"strategy"`
 	GambleHistory  []GambleHistory
 }
 

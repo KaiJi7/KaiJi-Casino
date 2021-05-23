@@ -6,16 +6,26 @@ import (
 	"KaiJi-Casino/internal/pkg/strategy/bet"
 	"KaiJi-Casino/internal/pkg/strategy/put"
 	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Gambler struct {
-	Name     string  `json:"name"`
+	Id    *primitive.ObjectID `json:"id"`
+	Name  string              `json:"name"`
+	Money int                 `json:"money"`
+
 	Capital  float64 `json:"capital"`
 	Strategy struct {
 		Bet bet.BaseStrategy
 		Put put.BaseStrategy
 	}
 	GambleHistory []collection.GambleHistory
+}
+
+func (g Gambler) MakeBet() {
+	log.Debug("make bet")
+
+	g.Strategy.Bet.GetDecisions()
 }
 
 func (g Gambler) Battle(gambleInfo []collection.SportsData) {
@@ -32,8 +42,8 @@ func (g Gambler) Battle(gambleInfo []collection.SportsData) {
 		}
 
 		hist := collection.GambleHistory{
-			BetInfo: d,
-			Win: isWin,
+			BetInfo:       d,
+			Win:           isWin,
 			CapitalBefore: g.Capital,
 		}
 		g.Capital -= float64(d.Unit)
