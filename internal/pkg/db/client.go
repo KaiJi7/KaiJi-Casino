@@ -10,8 +10,9 @@ import (
 
 type client struct {
 	*mongo.Client
-	SportsData *mongo.Collection
-	Gambler    *mongo.Collection
+	Game     *mongo.Collection
+	Gambling *mongo.Collection
+	Betting  *mongo.Collection
 }
 
 var (
@@ -27,9 +28,10 @@ func New() *client {
 		}
 		db := c.Database(configs.New().Mongo.Db)
 		instance = &client{
-			Client:     c,
-			SportsData: db.Collection("sports_data"),
-			Gambler:    db.Collection("gambler"),
+			Client:   c,
+			Game:     db.Collection("game"),
+			Gambling: db.Collection("gambling"),
+			Betting:  db.Collection("betting"),
 		}
 		if err := instance.Ping(nil, nil); err != nil {
 			panic(err)

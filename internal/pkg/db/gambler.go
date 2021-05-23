@@ -10,7 +10,7 @@ import (
 func (c *client) CreateGambler(gambler *collection.Gambler) error {
 	log.Debug("create gambler: ", gambler.String())
 
-	if _, err := c.Gambler.InsertOne(nil, gambler); err != nil {
+	if _, err := c.Gambling.InsertOne(nil, gambler); err != nil {
 		log.Error("fail to insert document: ", err.Error())
 		return err
 	}
@@ -22,7 +22,7 @@ func (c *client) CreateGambler(gambler *collection.Gambler) error {
 func (c *client) GetGamblers(filter bson.M, option *options.FindOptions) ([]collection.Gambler, error) {
 	log.Debug("get gambler")
 
-	cursor, err := c.Gambler.Find(nil, filter, option)
+	cursor, err := c.Gambling.Find(nil, filter, option)
 	if err != nil {
 		log.Error("fail to get documents")
 		return nil, err
@@ -36,7 +36,7 @@ func (c *client) GetGamblers(filter bson.M, option *options.FindOptions) ([]coll
 }
 
 func (c *client) CountGamblers(filter bson.M) int64 {
-	count, err := c.Gambler.CountDocuments(nil, filter)
+	count, err := c.Gambling.CountDocuments(nil, filter)
 	if err != nil {
 		log.Error("fail to count documents: ", err.Error())
 		return -1
