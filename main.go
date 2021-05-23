@@ -16,7 +16,7 @@ func main() {
 
 func testing() {
 	a := collection.SportsData{}
-	//var sd collection.SportsData
+	//var sd collection.Game
 	//json.Unmarshal([]byte(a), &sd)
 	b, _ := json.Marshal(a)
 	c := string(b)

@@ -9,11 +9,13 @@ const (
 	GAME_TYPE_NBA = "NBA"
 	GAME_TYPE_MLB = "MLB"
 	GAME_TYPE_NPB = "NPB"
+
+	GAME_TYPE_ALL = "all" // for banker query only
 )
 
 type GameType string
 
-type Game struct {
+type SportsGameResult struct {
 	Id    *primitive.ObjectID `json:"id" bson:"_id"`
 	Type  GameType            `json:"type" bson:"type"`
 	Guest struct {

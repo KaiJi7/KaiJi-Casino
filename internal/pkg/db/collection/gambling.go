@@ -1,6 +1,7 @@
 package collection
 
 import (
+	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -25,4 +26,25 @@ type Gambling struct {
 		Name  string      `json:"name" bson:"name"`
 		Value interface{} `json:"value" bson:"value"`
 	} `json:"properties" bson:"properties"`
+}
+
+func (g Gambling) GetOdds(bet Bet) float64 {
+	for _, odd := range g.Odds {
+		if odd.Bet == bet {
+			return odd.Odds
+		}
+	}
+	log.Warn("no odds info for bet: ", bet)
+	return 0
+}
+
+func (g Gambling) GetProperty(property string) interface{} {
+	for _, p := range g.Properties {
+		if p.Name == property {
+			return p.Value
+		}
+	}
+	
+	log.Warn("no property: ", property)
+	return nil
 }
