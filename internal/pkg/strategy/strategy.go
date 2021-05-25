@@ -1,12 +1,9 @@
 package strategy
 
-import "KaiJi-Casino/internal/pkg/db/collection"
-
-type Decision struct {
-	Bet  collection.Bet
-	Put float64
-}
+import (
+	"KaiJi-Casino/internal/pkg/db/collection"
+)
 
 type Strategy interface {
-	MakeDecision(gambles []collection.Gambling) []Decision
+	MakeDecision(gambles []collection.Gambling) []collection.Decision
 }
