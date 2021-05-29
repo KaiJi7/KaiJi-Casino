@@ -1,10 +1,14 @@
 package collection
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"KaiJi-Casino/internal/pkg/strategy"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
-type Strategy struct {
-	Id          *primitive.ObjectID `json:"id" bson:"_id"`
-	GamblerId   *primitive.ObjectID `json:"gambler_id" bson:"gambler_id"`
-	Name        string              `json:"name" bson:"name"`
-	Description string              `json:"description" bson:"description"`
+type StrategyData struct {
+	Id          *primitive.ObjectID    `json:"id" bson:"_id"`
+	GamblerId   *primitive.ObjectID    `json:"gambler_id" bson:"gambler_id"`
+	Name        strategy.Name          `json:"name" bson:"name"`
+	Properties  map[string]interface{} `json:"properties" bson:"properties"`
+	Description string                 `json:"description" bson:"description"`
 }
