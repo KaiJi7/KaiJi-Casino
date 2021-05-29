@@ -5,9 +5,16 @@ import (
 	"KaiJi-Casino/internal/pkg/db/collection"
 	"fmt"
 	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (b banker) Judge(decision collection.Decision) (result Winner, reward float64, err error) {
+type Judge struct {
+	DecisionId *primitive.ObjectID
+	Winner     Winner
+	Reward     float64
+}
+
+func (b banker) Judge(decision collection.Decision) (judge Judge, err error) {
 	log.Debug("judge")
 
 	gambling, err := db.New().GetGambling(decision.GambleId)
@@ -22,12 +29,14 @@ func (b banker) Judge(decision collection.Decision) (result Winner, reward float
 		return
 	}
 
+	judge.DecisionId = decision.Id
+
 	if res == decision.Bet {
-		result = WinnerGambler
-		reward = odds * decision.Put
+		judge.Winner = WinnerGambler
+		judge.Reward = odds * decision.Put
 	} else {
-		result = WinnerBanker
-		reward = 0
+		judge.Winner = WinnerBanker
+		judge.Reward = 0
 	}
 	return
 }
