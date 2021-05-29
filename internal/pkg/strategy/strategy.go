@@ -4,6 +4,7 @@ import (
 	"KaiJi-Casino/internal/pkg/db"
 	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy/lowerResponse"
+	"KaiJi-Casino/internal/pkg/strategy/lowestResponse"
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -11,6 +12,7 @@ import (
 
 var NameMap = map[Name]func(data collection.StrategyData) Strategy{
 	LowerResponse: lowerResponse.New,
+	LowestResponse: lowestResponse.New,
 }
 
 func InitStrategy(strategyId *primitive.ObjectID) (strategy Strategy, err error) {
