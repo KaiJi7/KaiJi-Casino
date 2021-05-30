@@ -74,7 +74,7 @@ func (g Gambler) OnBroken() {
 	return
 }
 
-func GetGambler(simulationId *primitive.ObjectID) (gamblers []Gambler, err error) {
+func GetGamblers(simulationId *primitive.ObjectID) (gamblers []Gambler, err error) {
 
 	gamblersData, err := db.New().ListGambler(simulationId)
 	if err != nil {
@@ -83,7 +83,7 @@ func GetGambler(simulationId *primitive.ObjectID) (gamblers []Gambler, err error
 	}
 
 	for _, gamblerData := range gamblersData {
-		strategyData, err := db.New().GetStrategy(gamblerData.SimulationId)
+		strategyData, err := db.New().GetStrategy(gamblerData.Id)
 		if err != nil {
 			log.Error("fail to get strategyData: ", err.Error())
 			return

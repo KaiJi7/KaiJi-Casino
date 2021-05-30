@@ -10,9 +10,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var NameMap = map[Name]func(data collection.StrategyData) Strategy{
-	LowerResponse: lowerResponse.New,
-	LowestResponse: lowestResponse.New,
+var NameMap = map[Name]struct {
+	Description string
+	Generator   func(data collection.StrategyData) Strategy
+}{
+	LowerResponse:  {Description: "Bet each games with lower odds.", Generator: lowerResponse.New},
+	LowestResponse: {Description: "Bet a game with the lowest odds.", Generator: lowestResponse.New},
 }
 
 func InitStrategy(strategyId *primitive.ObjectID) (strategy Strategy, err error) {
@@ -24,12 +27,12 @@ func InitStrategy(strategyId *primitive.ObjectID) (strategy Strategy, err error)
 		return
 	}
 
-	if generator, exist := NameMap[strategyData.Name]; !exist {
+	if content, exist := NameMap[strategyData.Name]; !exist {
 		log.Error("unsupported strategy: ", strategyData.Name)
 		err = fmt.Errorf("unsupported strategy")
 		return
 	} else {
-		strategy = generator(strategyData)
+		strategy = content.Generator(strategyData)
 	}
 	return
 }

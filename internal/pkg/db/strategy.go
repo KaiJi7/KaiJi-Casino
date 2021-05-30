@@ -24,12 +24,12 @@ func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name strategy.Name
 	return
 }
 
-func (c client) GetStrategy(strategyId *primitive.ObjectID) (strategy collection.StrategyData, err error) {
+func (c client) GetStrategy(gamblerId *primitive.ObjectID) (strategy collection.StrategyData, err error) {
 	filter := bson.M{
-		"_id": strategyId,
+		"gambler_id": gamblerId,
 	}
 	if err := c.Strategy.FindOne(nil, filter).Decode(&strategy); err != nil {
-		log.Error("fail to get strategy: ", strategyId.Hex(), ". ", err.Error())
+		log.Error("fail to get strategy: ", gamblerId.Hex(), ". ", err.Error())
 	}
 	return
 }
