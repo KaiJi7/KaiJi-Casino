@@ -16,6 +16,7 @@ type client struct {
 	Gambler       *mongo.Collection
 	GambleHistory *mongo.Collection
 	Strategy      *mongo.Collection
+	Simulation    *mongo.Collection
 }
 
 var (
@@ -38,6 +39,7 @@ func New() *client {
 			Gambler:       db.Collection("gambler"),
 			GambleHistory: db.Collection("gamble_history"),
 			Strategy:      db.Collection("strategy"),
+			Simulation:    db.Collection("simulation"),
 		}
 		if err := instance.Ping(nil, nil); err != nil {
 			panic(err)
