@@ -5,6 +5,7 @@ import (
 	"KaiJi-Casino/internal/pkg/db"
 	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy"
+	"KaiJi-Casino/internal/pkg/strategy/common"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -15,7 +16,7 @@ const (
 
 type Gambler struct {
 	collection.GamblerData
-	Strategy strategy.Strategy
+	Strategy common.Strategy
 }
 
 func (g *Gambler) MakeDecision(gambles []collection.Gambling) (decisions []collection.Decision) {
@@ -45,13 +46,13 @@ func (g *Gambler) HandleDecision(decisions []collection.Decision) {
 			continue
 		}
 
-		if judge.Winner == banker.WinnerGambler {
+		if judge.Winner == collection.GambleWinnerGambler {
 			g.MoneyCurrent += judge.Reward
 			g.Strategy.OnWin(decision)
 			continue
 		}
 
-		if judge.Winner == banker.WinnerBanker {
+		if judge.Winner == collection.GambleWinnerBanker {
 			if g.MoneyCurrent < BrokenThreshold {
 				g.OnBroken()
 				continue
@@ -60,7 +61,7 @@ func (g *Gambler) HandleDecision(decisions []collection.Decision) {
 			continue
 		}
 
-		if judge.Winner == banker.WinnerTie {
+		if judge.Winner == collection.GambleWinnerTie {
 			g.Strategy.OnTie(decision)
 			continue
 		}
@@ -76,21 +77,24 @@ func (g Gambler) OnBroken() {
 
 func GetGamblers(simulationId *primitive.ObjectID) (gamblers []Gambler, err error) {
 
-	gamblersData, err := db.New().ListGambler(simulationId)
-	if err != nil {
-		log.Error("fail to load gambler: ", err.Error())
+	gamblersData, dbErr := db.New().ListGambler(simulationId)
+	if dbErr != nil {
+		log.Error("fail to load gambler: ", dbErr.Error())
+		err = dbErr
 		return
 	}
 
 	for _, gamblerData := range gamblersData {
-		strategyData, err := db.New().GetStrategy(gamblerData.Id)
-		if err != nil {
-			log.Error("fail to get strategyData: ", err.Error())
+		strategyData, dbErr := db.New().GetStrategy(gamblerData.Id)
+		if dbErr != nil {
+			log.Error("fail to get strategyData: ", dbErr.Error())
+			err = dbErr
 			return
 		}
-		stg, err := strategy.InitStrategy(strategyData.Id)
-		if err != nil {
-			log.Error("gail to init strategy: ", err.Error())
+		stg, sErr := strategy.InitStrategy(strategyData.Id)
+		if sErr != nil {
+			log.Error("gail to init strategy: ", sErr.Error())
+			err = sErr
 			return
 		}
 

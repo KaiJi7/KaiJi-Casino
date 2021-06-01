@@ -4,7 +4,7 @@ import (
 	"KaiJi-Casino/internal/pkg/casino"
 	"KaiJi-Casino/internal/pkg/configs"
 	"KaiJi-Casino/internal/pkg/db"
-	"KaiJi-Casino/internal/pkg/strategy"
+	"KaiJi-Casino/internal/pkg/db/collection"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 	"gopkg.in/yaml.v3"
@@ -20,13 +20,14 @@ var (
 			configs.New()
 			log.Debug("read strategy schema file at: ", c.Path("strategy-schema"))
 
-			simulation, err := db.New().CreateSimulation(readSchema(c.Path("strategy-schema")), c.Float64("initial-money"))
-			if err != nil {
-				log.Error("fail to create simulation: ", err.Error())
+			simulation, dbErr := db.New().CreateSimulation(readSchema(c.Path("strategy-schema")), c.Float64("initial-money"))
+			if dbErr != nil {
+				log.Error("fail to create simulation: ", dbErr.Error())
+				err = dbErr
 				return
 			}
 
-			if err := casino.InitGamblers(simulation); err != nil {
+			if err = casino.InitGamblers(simulation); err != nil {
 				log.Error("fail to init gamblers: ", err.Error())
 				return
 			}
@@ -37,10 +38,10 @@ var (
 
 	initGamblerFlag = []cli.Flag{
 		&cli.Float64Flag{
-			Name: "initial-money",
+			Name:    "initial-money",
 			Aliases: []string{"m"},
-			Usage: "Initial money for each gambler",
-			Value: 100,
+			Usage:   "Initial money for each gambler",
+			Value:   100,
 		},
 		&cli.PathFlag{
 			Name:     "strategy-schema",
@@ -51,7 +52,7 @@ var (
 	}
 )
 
-func readSchema(path string) (schema map[strategy.Name]int){
+func readSchema(path string) (schema map[collection.StrategyName]int) {
 	file, err := os.Open(path)
 	if err != nil {
 		panic(err)

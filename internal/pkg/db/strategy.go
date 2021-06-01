@@ -2,22 +2,22 @@ package db
 
 import (
 	"KaiJi-Casino/internal/pkg/db/collection"
-	"KaiJi-Casino/internal/pkg/strategy"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name strategy.Name, description string) (strategy collection.StrategyData, err error) {
+func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name collection.StrategyName, description string) (strategy collection.StrategyData, err error) {
 	strategy = collection.StrategyData{
 		GamblerId:   gamblerId,
 		Name:        name,
 		Description: description,
 	}
 
-	res, err := c.Strategy.InsertOne(nil, strategy)
-	if err != nil {
-		log.Error("fail to insert strategy: ", err.Error())
+	res, dbErr := c.Strategy.InsertOne(nil, strategy)
+	if dbErr != nil {
+		log.Error("fail to insert strategy: ", dbErr.Error())
+		err = dbErr
 		return
 	}
 	strategy.Id = res.InsertedID.(*primitive.ObjectID)

@@ -10,7 +10,7 @@ import (
 
 type Judge struct {
 	DecisionId *primitive.ObjectID
-	Winner     Winner
+	Winner     collection.GambleWinner
 	Reward     float64
 }
 
@@ -31,11 +31,12 @@ func (b banker) Judge(decision collection.Decision) (judge Judge, err error) {
 
 	judge.DecisionId = decision.Id
 
+	// TODO: consider tie
 	if res == decision.Bet {
-		judge.Winner = WinnerGambler
+		judge.Winner = collection.GambleWinnerGambler
 		judge.Reward = odds * decision.Put
 	} else {
-		judge.Winner = WinnerBanker
+		judge.Winner = collection.GambleWinnerBanker
 		judge.Reward = 0
 	}
 	return

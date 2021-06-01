@@ -3,6 +3,7 @@ package strategy
 import (
 	"KaiJi-Casino/internal/pkg/db"
 	"KaiJi-Casino/internal/pkg/db/collection"
+	"KaiJi-Casino/internal/pkg/strategy/common"
 	"KaiJi-Casino/internal/pkg/strategy/lowerResponse"
 	"KaiJi-Casino/internal/pkg/strategy/lowestResponse"
 	"fmt"
@@ -10,15 +11,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var NameMap = map[Name]struct {
+var NameMap = map[collection.StrategyName]struct {
 	Description string
-	Generator   func(data collection.StrategyData) Strategy
+	Generator   func(data collection.StrategyData) common.Strategy
 }{
-	LowerResponse:  {Description: "Bet each games with lower odds.", Generator: lowerResponse.New},
-	LowestResponse: {Description: "Bet a game with the lowest odds.", Generator: lowestResponse.New},
+	collection.StrategyNameLowerResponse:  {Description: "Bet each games with lower odds.", Generator: lowerResponse.New},
+	collection.StrategyNameLowestResponse: {Description: "Bet a game with the lowest odds.", Generator: lowestResponse.New},
 }
 
-func InitStrategy(strategyId *primitive.ObjectID) (strategy Strategy, err error) {
+func InitStrategy(strategyId *primitive.ObjectID) (strategy common.Strategy, err error) {
 	log.Debug("init strategy: ", strategyId.Hex())
 
 	strategyData, err := db.New().GetStrategy(strategyId)

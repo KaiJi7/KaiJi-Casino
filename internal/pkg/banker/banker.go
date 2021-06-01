@@ -5,14 +5,6 @@ import (
 	"sync"
 )
 
-const (
-	WinnerBanker  Winner = "banker"  // banker win, gambler lose
-	WinnerGambler Winner = "gambler" // gambler win, banker lose
-	WinnerTie     Winner = "tie"
-)
-
-type Winner string
-
 type banker struct{}
 
 var (

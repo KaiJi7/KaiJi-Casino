@@ -22,13 +22,14 @@ func InitGamblers(simulation collection.Simulation) (err error) {
 		}
 
 		for i := 0; i < count; i++ {
-			gbl, err := db.New().CreateGambler(simulation.Id, simulation.GamblerInitialMoney)
-			if err != nil {
-				log.Error("fail to create gambler: ", err.Error())
+			gbl, dbErr := db.New().CreateGambler(simulation.Id, simulation.GamblerInitialMoney)
+			if dbErr != nil {
+				log.Error("fail to create gambler: ", dbErr.Error())
+				err = dbErr
 				return
 			}
 
-			if _, err := db.New().CreateStrategy(gbl.Id, strategyName, content.Description); err != nil {
+			if _, err = db.New().CreateStrategy(gbl.Id, strategyName, content.Description); err != nil {
 				log.Error("fail to create strategy: ", err.Error())
 				return
 			}

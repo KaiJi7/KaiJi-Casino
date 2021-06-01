@@ -27,13 +27,14 @@ func (c client) ListGambler(simulationId *primitive.ObjectID) (gamblers []collec
 		"simulationId": simulationId,
 	}
 
-	cursor, err := c.Gambler.Find(nil, filter)
-	if err != nil {
-		log.Error("fail to get gamblers: ", err.Error())
+	cursor, dbErr := c.Gambler.Find(nil, filter)
+	if dbErr != nil {
+		log.Error("fail to get gamblers: ", dbErr.Error())
+		err = dbErr
 		return
 	}
 
-	if err := cursor.All(nil, gamblers); err != nil {
+	if err = cursor.All(nil, gamblers); err != nil {
 		log.Error("fail to decode document: ", err.Error())
 		return
 	}

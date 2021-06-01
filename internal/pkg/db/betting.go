@@ -10,12 +10,13 @@ import (
 func (c client) GetBets(filter bson.M, option *options.FindOptions) (documents []collection.Betting, err error) {
 	log.Debug("get gambles")
 
-	cursor, err := c.Gambling.Find(nil, filter, option)
-	if err != nil {
-		log.Error("fail to get document: ", err.Error())
+	cursor, dbErr := c.Gambling.Find(nil, filter, option)
+	if dbErr != nil {
+		log.Error("fail to get document: ", dbErr.Error())
+		err = dbErr
 		return
 	}
-	if err := cursor.All(nil, documents); err != nil {
+	if err = cursor.All(nil, documents); err != nil {
 		log.Error("fail to decode document: ", err.Error())
 		return
 	}
