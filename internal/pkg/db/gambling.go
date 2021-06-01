@@ -26,7 +26,7 @@ func (c client) GetGambles(filter bson.M, option *options.FindOptions) (document
 		err = dbErr
 		return
 	}
-	if err = cursor.All(nil, documents); err != nil {
+	if err = cursor.All(nil, &documents); err != nil {
 		log.Error("fail to decode document: ", err.Error())
 		return
 	}

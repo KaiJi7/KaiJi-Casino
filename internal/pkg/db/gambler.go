@@ -18,7 +18,8 @@ func (c client) CreateGambler(simulationId *primitive.ObjectID, moneyBegin float
 		log.Error("fail to insert gambler: ", err.Error())
 		return
 	}
-	gambler.Id = res.InsertedID.(*primitive.ObjectID)
+	id := res.InsertedID.(primitive.ObjectID)
+	gambler.Id = &id
 	return
 }
 
@@ -34,7 +35,7 @@ func (c client) ListGambler(simulationId *primitive.ObjectID) (gamblers []collec
 		return
 	}
 
-	if err = cursor.All(nil, gamblers); err != nil {
+	if err = cursor.All(nil, &gamblers); err != nil {
 		log.Error("fail to decode document: ", err.Error())
 		return
 	}

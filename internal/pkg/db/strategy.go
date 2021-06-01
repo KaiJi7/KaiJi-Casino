@@ -20,7 +20,8 @@ func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name collection.St
 		err = dbErr
 		return
 	}
-	strategy.Id = res.InsertedID.(*primitive.ObjectID)
+	id := res.InsertedID.(primitive.ObjectID)
+	strategy.Id = &id
 	return
 }
 

@@ -16,7 +16,7 @@ const (
 type GamblingType string
 
 type Gambling struct {
-	Id         *primitive.ObjectID `json:"id" bson:"_id"`
+	Id         *primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Type       GamblingType        `json:"type" bson:"type"`
 	GameId     *primitive.ObjectID `json:"game_id" bson:"game_id"`
 	Odds       []Odds              `json:"odds" bson:"odds"`

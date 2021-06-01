@@ -16,7 +16,7 @@ func (c client) GetBets(filter bson.M, option *options.FindOptions) (documents [
 		err = dbErr
 		return
 	}
-	if err = cursor.All(nil, documents); err != nil {
+	if err = cursor.All(nil, &documents); err != nil {
 		log.Error("fail to decode document: ", err.Error())
 		return
 	}

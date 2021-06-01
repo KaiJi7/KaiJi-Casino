@@ -17,7 +17,7 @@ func (c *client) GetHistory(filter bson.M, option *options.FindOptions) (history
 		return
 	}
 
-	if err := cursor.All(nil, history); err != nil {
+	if err := cursor.All(nil, &history); err != nil {
 		log.Error("fail to decode document: ", err.Error())
 	}
 	return

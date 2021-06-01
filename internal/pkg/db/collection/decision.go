@@ -6,7 +6,7 @@ import (
 )
 
 type Decision struct {
-	Id         *primitive.ObjectID `json:"id" bson:"_id"`
+	Id         *primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	StrategyId *primitive.ObjectID `json:"strategy_id" bson:"strategy_id"`
 	GambleId   *primitive.ObjectID `json:"gamble_id" bson:"gamble_id"`
 	Bet        Bet                 `json:"bet" bson:"bet"`

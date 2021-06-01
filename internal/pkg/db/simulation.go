@@ -18,6 +18,7 @@ func (c client) CreateSimulation(strategySchema map[collection.StrategyName]int,
 		err = dbErr
 		return
 	}
-	simulation.Id = res.InsertedID.(*primitive.ObjectID)
+	id := res.InsertedID.(primitive.ObjectID)
+	simulation.Id = &id
 	return
 }

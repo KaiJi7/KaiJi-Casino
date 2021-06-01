@@ -16,7 +16,7 @@ const (
 type GameType string
 
 type SportsGameResult struct {
-	Id    *primitive.ObjectID `json:"id" bson:"_id"`
+	Id    *primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Type  GameType            `json:"type" bson:"type"`
 	Guest struct {
 		Name  string `json:"name" bson:"name"`
