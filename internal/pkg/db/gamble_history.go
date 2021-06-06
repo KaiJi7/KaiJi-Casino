@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (c *client) GetHistory(filter bson.M, option *options.FindOptions) (history []collection.N_GambleHistory, err error) {
+func (c *client) GetHistory(filter bson.M, option *options.FindOptions) (history []collection.GambleHistory, err error) {
 	log.Debug("get gamble history")
 
 	cursor, dbErr := c.GambleHistory.Find(nil, filter, option)
@@ -23,7 +23,7 @@ func (c *client) GetHistory(filter bson.M, option *options.FindOptions) (history
 	return
 }
 
-func (c client) SaveHistory(history collection.N_GambleHistory) (err error) {
+func (c client) SaveHistory(history collection.GambleHistory) (err error) {
 	_, err = c.GambleHistory.InsertOne(nil, history)
 	return
 }
