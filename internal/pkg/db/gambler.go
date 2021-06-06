@@ -4,46 +4,40 @@ import (
 	"KaiJi-Casino/internal/pkg/db/collection"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (c *client) CreateGambler(gambler *collection.Gambler) error {
-	log.Debug("create gambler: ", gambler.String())
-
-	if _, err := c.Gambling.InsertOne(nil, gambler); err != nil {
-		log.Error("fail to insert document: ", err.Error())
-		return err
+func (c client) CreateGambler(simulationId *primitive.ObjectID, moneyBegin float64) (gambler collection.GamblerData, err error) {
+	gambler = collection.GamblerData{
+		SimulationId: simulationId,
+		MoneyBegin:   moneyBegin,
+		MoneyCurrent: moneyBegin,
 	}
-
-	log.Debug("gambler created: ", gambler.String())
-	return nil
+	res, err := c.Gambler.InsertOne(nil, gambler)
+	if err != nil {
+		log.Error("fail to insert gambler: ", err.Error())
+		return
+	}
+	id := res.InsertedID.(primitive.ObjectID)
+	gambler.Id = &id
+	return
 }
 
-func (c *client) GetGamblers(filter bson.M, option *options.FindOptions) ([]collection.Gambler, error) {
-	log.Debug("get gambler")
-
-	cursor, err := c.Gambling.Find(nil, filter, option)
-	if err != nil {
-		log.Error("fail to get documents")
-		return nil, err
+func (c client) ListGambler(simulationId *primitive.ObjectID) (gamblers []collection.GamblerData, err error) {
+	filter := bson.M{
+		"simulationId": simulationId,
 	}
-	var gamblers []collection.Gambler
-	if err := cursor.All(nil, gamblers); err != nil {
+
+	cursor, dbErr := c.Gambler.Find(nil, filter)
+	if dbErr != nil {
+		log.Error("fail to get gamblers: ", dbErr.Error())
+		err = dbErr
+		return
+	}
+
+	if err = cursor.All(nil, &gamblers); err != nil {
 		log.Error("fail to decode document: ", err.Error())
-		return nil, err
+		return
 	}
-	return gamblers, nil
-}
-
-func (c *client) CountGamblers(filter bson.M) int64 {
-	count, err := c.Gambling.CountDocuments(nil, filter)
-	if err != nil {
-		log.Error("fail to count documents: ", err.Error())
-		return -1
-	}
-	return count
-}
-
-func (c client) AppendHistory(gamblerName string, history []collection.GambleHistory) {
-
+	return
 }
