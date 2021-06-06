@@ -62,7 +62,7 @@ func getAverageNetProfit(history []collection.GambleHistory) float64 {
 	}
 	sum := 0.0
 	for _, h := range history {
-		sum += h.BetInfo.GetResponse()
+		sum += h.BetInfo.Response
 	}
 	return sum / float64(len(history)) - 1
 }

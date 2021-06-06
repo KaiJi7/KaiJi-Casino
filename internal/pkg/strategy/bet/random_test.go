@@ -22,7 +22,7 @@ func Test_random_GetDecisions(t *testing.T) {
 	filter := bson.M{
 		"_id": oId,
 	}
-	games, _ := db.New().GetGames(filter, nil)
+	games, _ := db.New().GetGamesInfo(filter, nil)
 	tests := []struct {
 		name   string
 		fields fields
@@ -55,7 +55,7 @@ func Test_random_GetDecisions(t *testing.T) {
 		r := &random{
 			Name: tests[0].fields.Name,
 		}
-		if got := r.GetDecisions(tests[0].args.games); got == nil {
+		if got := r.GetDecisions(tests[0].args.games, nil); got == nil {
 			t.Errorf("GetDecisions() = %v, want non nil", got)
 		}
 	})
@@ -65,7 +65,7 @@ func Test_random_GetDecisions(t *testing.T) {
 			r := &random{
 				Name: tt.fields.Name,
 			}
-			if got := r.GetDecisions(tt.args.games); !reflect.DeepEqual(got, tt.want) {
+			if got := r.GetDecisions(tt.args.games, nil); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetDecisions() = %v, want %v", got, tt.want)
 			}
 		})

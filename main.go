@@ -1,24 +1,14 @@
 package main
 
 import (
-	"KaiJi-Casino/internal/pkg/configs"
-	"KaiJi-Casino/internal/pkg/db"
-	"KaiJi-Casino/internal/pkg/db/collection"
-	"encoding/json"
-	"fmt"
+	"KaiJi-Casino/internal/pkg/cli"
+	log "github.com/sirupsen/logrus"
+	"os"
 )
 
 func main() {
-	testing()
-	configs.New()
-	db.New()
-}
-
-func testing() {
-	a := collection.SportsData{}
-	//var sd collection.SportsData
-	//json.Unmarshal([]byte(a), &sd)
-	b, _ := json.Marshal(a)
-	c := string(b)
-	fmt.Println(string(c))
+	err := cli.InitCli().Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

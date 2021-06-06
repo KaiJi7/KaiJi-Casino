@@ -1,7 +1,6 @@
 package bet
 
 import (
-	"KaiJi-Casino/internal/pkg/configs"
 	"KaiJi-Casino/internal/pkg/db/collection"
 	log "github.com/sirupsen/logrus"
 	"math/rand"
@@ -11,6 +10,10 @@ import (
 type confidenceBase struct {
 	Name string
 }
+
+const (
+	defaultThreshold = 512
+)
 
 var (
 	confidenceBaseOnce     sync.Once
@@ -32,7 +35,7 @@ func (c confidenceBase) GetDecisions(games []collection.SportsData, parameters m
 
 	t, exist := parameters["threshold"]
 	if !exist {
-		t = configs.New().Strategy.Bet.ConfidenceBase.Threshold
+		t = defaultThreshold
 	}
 	threshold := t.(float64)
 	for _, game := range games {

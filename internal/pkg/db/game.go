@@ -8,50 +8,43 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// get games with the whole data
-func (c *client) GetGames(filter bson.M, option *options.FindOptions) (documents []collection.SportsData, err error) {
-	log.Debug("query games from db: ", filter)
+func (c client) GetGame(gameId *primitive.ObjectID) (game collection.SportsGameResult, err error) {
+	log.Debug("get game: ", gameId.Hex())
 
-	cursor, err := c.SportsData.Find(nil, filter, option)
-	if err != nil {
-		log.Error("fail to get document: ", err.Error())
+	filter := bson.M{
+		"_id": gameId,
+	}
+
+	err = c.Game.FindOne(nil, filter).Decode(&game)
+	return
+}
+
+func (c client) GetGamesInfo(filter bson.M, option *options.FindOptions) (documents []collection.SportsGameInfo, err error) {
+	log.Debug("query games info from db")
+
+	cursor, dbErr := c.Game.Find(nil, filter, option)
+	if dbErr != nil {
+		log.Error("fail to get document: ", dbErr.Error())
+		err = dbErr
 		return
 	}
-	if err := cursor.All(nil, &documents); err != nil {
+	if err = cursor.All(nil, &documents); err != nil {
 		log.Error("fail to decode documents: ", err.Error())
 	}
 	return
 }
 
-// get gamble info only, without result and judgement
-func (c *client) GetGambleInfo(gameId primitive.ObjectID) (sportsData collection.SportsData, err error) {
-	log.Debug("get gamble info: ", gameId.Hex())
+func (c client) GetGamesResult(filter bson.M, option *options.FindOptions) (documents []collection.SportsGameResult, err error) {
+	log.Debug("query games result from db: ", filter)
 
-	filter := bson.M{
-		"_id": gameId,
+	cursor, dbErr := c.Game.Find(nil, filter, option)
+	if dbErr != nil {
+		log.Error("fail to get document: ", dbErr.Error())
+		err = dbErr
+		return
 	}
-	opt := options.FindOne().SetProjection(
-		bson.M{
-			"gamble_info.total_point.judgement":         0,
-			"gamble_info.total_point.prediction.major":  0,
-			"gamble_info.spread_point.judgement":        0,
-			"gamble_info.spread_point.prediction.major": 0,
-			"gamble_info.original.judgement":            0,
-			"gamble_info.original.prediction.major":     0,
-		},
-	)
-
-	if err := c.SportsData.FindOne(nil, filter, opt).Decode(&sportsData); err != nil {
-		log.Error("fail to decode document: ", err.Error())
+	if err = cursor.All(nil, &documents); err != nil {
+		log.Error("fail to decode documents: ", err.Error())
 	}
 	return
-}
-
-func (c *client) CountGames(filter bson.M) int64 {
-	count, err := c.SportsData.CountDocuments(nil, filter)
-	if err != nil {
-		log.Error("fail to count documents: ", err.Error())
-		return -1
-	}
-	return count
 }
