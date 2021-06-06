@@ -23,7 +23,7 @@ func New(data collection.StrategyData) common.Strategy {
 }
 
 func (s Strategy) TargetGameType() []collection.GameType {
-	return []collection.GameType{collection.GameTypeNba}
+	return []collection.GameType{collection.GameTypeAll}
 }
 
 func (s Strategy) MakeDecision(gambles []collection.Gambling) []collection.Decision {
