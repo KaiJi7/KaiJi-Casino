@@ -101,7 +101,7 @@ func (g *Gambler) handleDecision(decisions []collection.Decision) {
 			continue
 		}
 
-		hist := collection.N_GambleHistory{
+		hist := collection.GambleHistory{
 			DecisionId: decision.Id,
 			Winner: judge.Winner,
 			MoneyBefore: g.MoneyCurrent,

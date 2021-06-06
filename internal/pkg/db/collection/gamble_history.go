@@ -12,7 +12,7 @@ const (
 
 type GambleWinner string
 
-type N_GambleHistory struct {
+type GambleHistory struct {
 	Id          *primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	DecisionId  *primitive.ObjectID `json:"decision_id" bson:"decision_id"`
 	Winner      GambleWinner        `json:"winner"`
