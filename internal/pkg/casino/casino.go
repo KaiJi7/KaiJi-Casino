@@ -7,6 +7,7 @@ import (
 	"KaiJi-Casino/internal/pkg/strategy"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"sync"
 )
 
 var Gamblers []gambler.Gambler
@@ -62,7 +63,12 @@ func LoadGamblers(simulationId string) (err error){
 func Start(days int) {
 	log.Debug("start casino, days: ", days)
 
+	var wg sync.WaitGroup
+
 	for _, gbl := range Gamblers {
-		go gbl.PlaySince(days)
+		go gbl.PlaySince(&wg, days)
 	}
+
+	wg.Wait()
+	log.Debug("completed")
 }

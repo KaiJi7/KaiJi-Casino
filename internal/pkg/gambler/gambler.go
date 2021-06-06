@@ -9,6 +9,7 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"sync"
 	"time"
 )
 
@@ -33,7 +34,8 @@ type Gambler struct {
 //}
 
 // PlaySince plays gamble with latest n days game
-func (g Gambler) PlaySince(days int) {
+func (g Gambler) PlaySince(wg *sync.WaitGroup, days int) {
+	defer wg.Done()
 
 	// get games which use to gamble
 	gamesToGamble := make([]collection.SportsGameInfo, 0)
