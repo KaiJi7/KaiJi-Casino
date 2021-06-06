@@ -44,7 +44,7 @@ func (g Gambler) PlaySince(wg *sync.WaitGroup, days int) {
 	for d := -days; d < 0; d++ {
 
 		for _, tg := range g.Strategy.TargetGameType() {
-			gamesToGamble = append(gamesToGamble, banker.New().GetGames(tg, time.Now().AddDate(0, 0, -d), time.Now())...)
+			gamesToGamble = append(gamesToGamble, banker.New().GetGames(tg, time.Now().AddDate(0, 0, d), time.Now())...)
 		}
 
 		g.play(gamesToGamble)
@@ -73,10 +73,14 @@ func (g *Gambler) makeDecision(gambles []collection.Gambling) (decisions []colle
 	for _, decision := range allDecisions {
 		if g.MoneyCurrent > decision.Put {
 			g.MoneyCurrent -= decision.Put
-			decisions = append(decisions, decision)
 
 			// TODO: consider error handling
-			_ = db.New().SaveDecision(decision)
+			decision, err := db.New().SaveDecision(decision)
+			if err != nil {
+				log.Error("fail to save decision: ", err.Error())
+				continue
+			}
+			decisions = append(decisions, decision)
 		} else {
 			log.Info("not enough money to bet decision: ", decision.String())
 			continue
@@ -128,8 +132,8 @@ func (g *Gambler) handleDecision(decisions []collection.Decision) {
 		if err := db.New().SaveHistory(hist); err != nil {
 			log.Error("fail to save gamble history: ", err.Error())
 		}
-		return
 	}
+	return
 }
 
 func (g Gambler) OnBroken() {
@@ -156,7 +160,7 @@ func GetGamblers(simulationId *primitive.ObjectID) (gamblers []Gambler, err erro
 			err = dbErr
 			return
 		}
-		stg, sErr := strategy.GetStrategy(strategyData.Id)
+		stg, sErr := strategy.GetStrategy(strategyData)
 		if sErr != nil {
 			log.Error("gail to init strategy: ", sErr.Error())
 			err = sErr

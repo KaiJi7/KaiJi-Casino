@@ -14,7 +14,7 @@ var Gamblers []gambler.Gambler
 //var strategies []collection.StrategyData
 
 func CreateGamblers(simulation collection.Simulation) (err error) {
-	log.Debug("init gamblers: ", simulation.String())
+	log.Debug("create gamblers: ", simulation.String())
 
 	for strategyName, count := range simulation.StrategySchema {
 		content, exist := strategy.NameMap[strategyName]
@@ -66,9 +66,13 @@ func Start(days int) {
 	var wg sync.WaitGroup
 
 	for _, gbl := range Gamblers {
+		wg.Add(1)
 		go gbl.PlaySince(&wg, days)
 	}
 
 	wg.Wait()
 	log.Debug("completed")
+	//for {
+	//	time.Sleep(5 * time.Second)
+	//}
 }

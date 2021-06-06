@@ -37,11 +37,16 @@ func (c client) GetDecisions(strategyId *primitive.ObjectID, gambleId *primitive
 	return
 }
 
-func (c client) SaveDecision(decision collection.Decision) (err error) {
-	_, err = c.Decision.InsertOne(nil, decision)
-	if err != nil {
-		log.Error("fail to insert document: ", err.Error())
+func (c client) SaveDecision(decision collection.Decision) (document collection.Decision, err error) {
+	res, dbErr := c.Decision.InsertOne(nil, decision)
+	if dbErr != nil {
+		log.Error("fail to insert document: ", dbErr.Error())
+		err = dbErr
+		return
 	}
+	oId := res.InsertedID.(primitive.ObjectID)
+	document = decision
+	document.Id = &oId
 	return
 }
 

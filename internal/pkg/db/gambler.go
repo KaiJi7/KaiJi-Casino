@@ -25,7 +25,7 @@ func (c client) CreateGambler(simulationId *primitive.ObjectID, moneyBegin float
 
 func (c client) ListGambler(simulationId *primitive.ObjectID) (gamblers []collection.GamblerData, err error) {
 	filter := bson.M{
-		"simulationId": simulationId,
+		"simulation_id": simulationId,
 	}
 
 	cursor, dbErr := c.Gambler.Find(nil, filter)

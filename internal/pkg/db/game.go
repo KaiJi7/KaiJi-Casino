@@ -20,7 +20,7 @@ func (c client) GetGame(gameId *primitive.ObjectID) (game collection.SportsGameR
 }
 
 func (c client) GetGamesInfo(filter bson.M, option *options.FindOptions) (documents []collection.SportsGameInfo, err error) {
-	log.Debug("query games info from db: ", filter)
+	log.Debug("query games info from db")
 
 	cursor, dbErr := c.Game.Find(nil, filter, option)
 	if dbErr != nil {

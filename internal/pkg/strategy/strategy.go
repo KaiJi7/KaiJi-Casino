@@ -1,14 +1,12 @@
 package strategy
 
 import (
-	"KaiJi-Casino/internal/pkg/db"
 	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy/common"
 	"KaiJi-Casino/internal/pkg/strategy/lowerResponse"
 	"KaiJi-Casino/internal/pkg/strategy/lowestResponse"
 	"fmt"
 	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var NameMap = map[collection.StrategyName]struct {
@@ -19,14 +17,8 @@ var NameMap = map[collection.StrategyName]struct {
 	collection.StrategyNameLowestResponse: {Description: "Bet a game with the lowest odds.", Generator: lowestResponse.New},
 }
 
-func GetStrategy(strategyId *primitive.ObjectID) (strategy common.Strategy, err error) {
-	log.Debug("init strategy: ", strategyId.Hex())
-
-	strategyData, err := db.New().GetStrategy(strategyId)
-	if err != nil {
-		log.Error("fail to init strategy: ", err.Error())
-		return
-	}
+func GetStrategy(strategyData collection.StrategyData) (strategy common.Strategy, err error) {
+	log.Debug("get strategy: ", strategyData.Id.Hex())
 
 	if content, exist := NameMap[strategyData.Name]; !exist {
 		log.Error("unsupported strategy: ", strategyData.Name)
