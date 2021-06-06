@@ -10,9 +10,9 @@ import (
 const defaultLowestOdds = 10.0
 
 type Strategy struct {
-	Id        *primitive.ObjectID `json:"id" bson:"_id"`
-	GamblerId *primitive.ObjectID `json:"gambler_id" bson:"gambler_id"`
-	Name      collection.StrategyName       `json:"name" bson:"name"`
+	Id        *primitive.ObjectID     `json:"id" bson:"_id"`
+	GamblerId *primitive.ObjectID     `json:"gambler_id" bson:"gambler_id"`
+	Name      collection.StrategyName `json:"name" bson:"name"`
 	//Description string              `json:"description" bson:"description"`
 }
 
@@ -22,6 +22,10 @@ func New(data collection.StrategyData) common.Strategy {
 		GamblerId: data.GamblerId,
 		Name:      data.Name,
 	}
+}
+
+func (s Strategy) TargetGameType() []collection.GameType {
+	return []collection.GameType{collection.GameTypeNba}
 }
 
 func (s Strategy) MakeDecision(gambles []collection.Gambling) (decision []collection.Decision) {

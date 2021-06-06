@@ -22,3 +22,8 @@ func (c *client) GetHistory(filter bson.M, option *options.FindOptions) (history
 	}
 	return
 }
+
+func (c client) SaveHistory(history collection.N_GambleHistory) (err error) {
+	_, err = c.GambleHistory.InsertOne(nil, history)
+	return
+}

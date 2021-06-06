@@ -9,8 +9,26 @@ import (
 	"time"
 )
 
-func (b banker) GetGames(gameType collection.GameType, begin time.Time, end time.Time) (games []collection.SportsGameResult, err error) {
-	// TODO: consider result exposure
+func (b banker) GetTodayGames(gameType collection.GameType) []collection.SportsGameInfo {
+	log.Debug("get today games")
+
+	filter := bson.M{
+		"type": gameType,
+		"start_time": bson.M{
+			"$gt": time.Now().AddDate(0, 0, -1),
+		},
+	}
+
+	games, err := db.New().GetGamesInfo(filter, nil)
+	if err != nil {
+		log.Error("fail to get games info: ", err.Error())
+		return nil
+	}
+
+	return games
+}
+
+func (b banker) GetGames(gameType collection.GameType, begin time.Time, end time.Time) []collection.SportsGameInfo {
 	log.Debug("get games")
 
 	var filter bson.M
@@ -31,17 +49,29 @@ func (b banker) GetGames(gameType collection.GameType, begin time.Time, end time
 		}
 	}
 
-	return db.New().GetGames(filter, nil)
+	games, err := db.New().GetGamesInfo(filter, nil)
+	if err != nil {
+		log.Error("fail to get games info: ", err.Error())
+		return nil
+	}
+
+	return games
 }
 
-func (b banker) GetGambles(gameId *primitive.ObjectID) (gambles []collection.Gambling, err error) {
+func (b banker) GetGambles(gameId *primitive.ObjectID) []collection.Gambling {
 	log.Debug("get gambles")
 
 	filter := bson.M{
 		"game_id": gameId,
 	}
 
-	return db.New().GetGambles(filter, nil)
+	gambles, err := db.New().GetGambles(filter, nil)
+	if err != nil {
+		log.Error("fail to get gambles: ", err.Error())
+		return nil
+	}
+
+	return gambles
 }
 
 func (b banker) GetBettings(gamblingId *primitive.ObjectID) (bets []collection.Betting, err error) {

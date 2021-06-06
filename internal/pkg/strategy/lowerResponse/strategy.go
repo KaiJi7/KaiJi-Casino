@@ -22,6 +22,10 @@ func New(data collection.StrategyData) common.Strategy {
 	}
 }
 
+func (s Strategy) TargetGameType() []collection.GameType {
+	return []collection.GameType{collection.GameTypeNba}
+}
+
 func (s Strategy) MakeDecision(gambles []collection.Gambling) []collection.Decision {
 	decisions := make([]collection.Decision, 0)
 	for _, gamble := range gambles {

@@ -6,12 +6,13 @@ import (
 	"KaiJi-Casino/internal/pkg/gambler"
 	"KaiJi-Casino/internal/pkg/strategy"
 	log "github.com/sirupsen/logrus"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var Gamblers []gambler.Gambler
 //var strategies []collection.StrategyData
 
-func InitGamblers(simulation collection.Simulation) (err error) {
+func CreateGamblers(simulation collection.Simulation) (err error) {
 	log.Debug("init gamblers: ", simulation.String())
 
 	for strategyName, count := range simulation.StrategySchema {
@@ -38,4 +39,30 @@ func InitGamblers(simulation collection.Simulation) (err error) {
 
 	Gamblers, err = gambler.GetGamblers(simulation.Id)
 	return
+}
+
+func LoadGamblers(simulationId string) (err error){
+	log.Debug("load gamblers with simulation id: ", simulationId)
+
+	sId, oErr := primitive.ObjectIDFromHex(simulationId)
+	if oErr != nil {
+		log.Warn("invalid simulationId: ", oErr.Error())
+		err = oErr
+		return
+	}
+	if Gamblers, err = gambler.GetGamblers(&sId); err != nil {
+		log.Error("fail to get gamblers: ", err.Error())
+		return
+	}
+
+	log.Debug("gambler loaded, simulation id: ", simulationId)
+	return
+}
+
+func Start(days int) {
+	log.Debug("start casino, days: ", days)
+
+	for _, gbl := range Gamblers {
+		go gbl.PlaySince(days)
+	}
 }

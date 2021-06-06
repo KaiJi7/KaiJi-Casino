@@ -13,12 +13,9 @@ const (
 type GambleWinner string
 
 type N_GambleHistory struct {
-	Id          *primitive.ObjectID `json:"id"`
-	GamblerId   *primitive.ObjectID `json:"gambler_id"`
-	GamblingId  *primitive.ObjectID `json:"gambling_id"`
-	Bet         Bet                 `json:"bet"`
-	Odds        float64             `json:"odds"`
+	Id          *primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	DecisionId  *primitive.ObjectID `json:"decision_id" bson:"decision_id"`
 	Winner      GambleWinner        `json:"winner"`
-	MoneyBefore float64             `json:"money_before"`
-	MoneyAfter  float64             `json:"money_after"`
+	MoneyBefore float64             `json:"money_before" bson:"money_before"`
+	MoneyAfter  float64             `json:"money_after" bson:"money_after"`
 }

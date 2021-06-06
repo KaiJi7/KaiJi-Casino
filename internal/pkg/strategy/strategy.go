@@ -19,7 +19,7 @@ var NameMap = map[collection.StrategyName]struct {
 	collection.StrategyNameLowestResponse: {Description: "Bet a game with the lowest odds.", Generator: lowestResponse.New},
 }
 
-func InitStrategy(strategyId *primitive.ObjectID) (strategy common.Strategy, err error) {
+func GetStrategy(strategyId *primitive.ObjectID) (strategy common.Strategy, err error) {
 	log.Debug("init strategy: ", strategyId.Hex())
 
 	strategyData, err := db.New().GetStrategy(strategyId)

@@ -5,6 +5,7 @@ import (
 	"KaiJi-Casino/internal/pkg/configs"
 	"KaiJi-Casino/internal/pkg/db"
 	"KaiJi-Casino/internal/pkg/db/collection"
+	"KaiJi-Casino/internal/pkg/strategy"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 	"gopkg.in/yaml.v3"
@@ -12,9 +13,10 @@ import (
 )
 
 var (
-	initGambler = &cli.Command{
-		Name:    "init-gambler",
-		Aliases: []string{"ig"},
+	newSimulation = &cli.Command{
+		Name:    "new-simulation",
+		Usage:   "Create a new simulation",
+		Aliases: []string{"ns"},
 		Flags:   initGamblerFlag,
 		Action: func(c *cli.Context) (err error) {
 			configs.New()
@@ -27,10 +29,13 @@ var (
 				return
 			}
 
-			if err = casino.InitGamblers(simulation); err != nil {
+			if err = casino.CreateGamblers(simulation); err != nil {
 				log.Error("fail to init gamblers: ", err.Error())
 				return
 			}
+
+			log.Debug("gamblers initialized, simulation id: ", simulation.Id)
+			casino.Start(c.Int("days"))
 
 			return
 		},
@@ -49,6 +54,12 @@ var (
 			Usage:    "Strategy schema file",
 			Required: true,
 		},
+		&cli.IntFlag{
+			Name:     "days",
+			Aliases:  []string{"d"},
+			Usage:    "How many days each gambler to gamble",
+			Required: true,
+		},
 	}
 )
 
@@ -63,5 +74,19 @@ func readSchema(path string) (schema map[collection.StrategyName]int) {
 	if err := d.Decode(&schema); err != nil {
 		panic(err)
 	}
+
+	if !validateSchema(schema) {
+		log.Panic("invalid schema")
+	}
 	return
+}
+
+func validateSchema(schema map[collection.StrategyName]int) bool {
+	for s, _ := range schema {
+		if _, exist := strategy.NameMap[s]; !exist {
+			log.Error("unsupported schema: ", s)
+			return false
+		}
+	}
+	return true
 }

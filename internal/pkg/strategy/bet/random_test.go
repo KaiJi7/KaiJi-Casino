@@ -22,7 +22,7 @@ func Test_random_GetDecisions(t *testing.T) {
 	filter := bson.M{
 		"_id": oId,
 	}
-	games, _ := db.New().GetGames(filter, nil)
+	games, _ := db.New().GetGamesInfo(filter, nil)
 	tests := []struct {
 		name   string
 		fields fields

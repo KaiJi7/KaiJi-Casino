@@ -21,6 +21,7 @@ func InitCli() (app *cli.App) {
 
 func initCommand() []*cli.Command {
 	return []*cli.Command{
-		initGambler,
+		newSimulation,
+		resumeSimulation,
 	}
 }
