@@ -7,11 +7,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name collection.StrategyName, description string) (strategy collection.StrategyData, err error) {
+func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name collection.StrategyName, meta *primitive.ObjectID, properties map[string]interface{}) (strategy collection.StrategyData, err error) {
 	strategy = collection.StrategyData{
-		GamblerId:   gamblerId,
-		Name:        name,
-		Description: description,
+		GamblerId:  gamblerId,
+		Name:       name,
+		Meta:       meta,
+		Properties: properties,
 	}
 
 	res, dbErr := c.Strategy.InsertOne(nil, strategy)
@@ -25,12 +26,28 @@ func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name collection.St
 	return
 }
 
-func (c client) GetStrategy(gamblerId *primitive.ObjectID) (strategy collection.StrategyData, err error) {
+func (c client) CreateMetaStrategy(metasStrategy collection.StrategyMeta) (err error) {
+	_, err = c.StrategyMeta.InsertOne(nil, metasStrategy)
+	return
+}
+
+func (c client) GetStrategyData(gamblerId *primitive.ObjectID) (strategy collection.StrategyData, err error) {
 	filter := bson.M{
 		"gambler_id": gamblerId,
 	}
 	if err := c.Strategy.FindOne(nil, filter).Decode(&strategy); err != nil {
 		log.Error("fail to get strategy: ", gamblerId.Hex(), ". ", err.Error())
+	}
+	return
+}
+
+func (c client) GetStrategyMetaData(name collection.StrategyName) (strategyMeta collection.StrategyMeta, err error) {
+	filter := bson.M{
+		"name": name,
+	}
+	if err := c.StrategyMeta.FindOne(nil, filter).Decode(&strategyMeta); err != nil {
+		log.Error("fail to get strategy meta: ", name, ". ", err.Error())
+		panic(err.Error())
 	}
 	return
 }

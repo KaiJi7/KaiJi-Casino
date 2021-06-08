@@ -4,23 +4,17 @@ import (
 	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy/common"
 	log "github.com/sirupsen/logrus"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const defaultLowestOdds = 10.0
 
 type Strategy struct {
-	Id        *primitive.ObjectID     `json:"id" bson:"_id"`
-	GamblerId *primitive.ObjectID     `json:"gambler_id" bson:"gambler_id"`
-	Name      collection.StrategyName `json:"name" bson:"name"`
-	//Description string              `json:"description" bson:"description"`
+	collection.StrategyData
 }
 
 func New(data collection.StrategyData) common.Strategy {
 	return Strategy{
-		Id:        data.Id,
-		GamblerId: data.GamblerId,
-		Name:      data.Name,
+		data,
 	}
 }
 

@@ -11,29 +11,40 @@ import (
 )
 
 var Gamblers []gambler.Gambler
+
 //var strategies []collection.StrategyData
 
 func CreateGamblers(simulation collection.Simulation) (err error) {
 	log.Debug("create gamblers: ", simulation.String())
 
-	for strategyName, count := range simulation.StrategySchema {
-		content, exist := strategy.NameMap[strategyName]
+	for strategyName, schema := range simulation.StrategySchema {
+		_, exist := strategy.NameMap[strategyName]
 		if !exist {
 			log.Warn("invalid strategy: ", strategyName)
 			return
 		}
 
-		for i := 0; i < count; i++ {
-			gbl, dbErr := db.New().CreateGambler(simulation.Id, simulation.GamblerInitialMoney)
-			if dbErr != nil {
-				log.Error("fail to create gambler: ", dbErr.Error())
-				err = dbErr
-				return
-			}
+		for _, s := range schema {
+			for i := 0; i < s.Quantity; i++ {
+				gbl, dbErr := db.New().CreateGambler(simulation.Id, simulation.GamblerInitialMoney)
+				if dbErr != nil {
+					log.Error("fail to create gambler: ", dbErr.Error())
+					err = dbErr
+					return
+				}
 
-			if _, err = db.New().CreateStrategy(gbl.Id, strategyName, content.Description); err != nil {
-				log.Error("fail to create strategy: ", err.Error())
-				return
+				meta, dbErr := db.New().GetStrategyMetaData(strategyName)
+				if dbErr != nil {
+					log.Error("fail to get strategy meta data: ", dbErr.Error())
+					err = dbErr
+					return
+				}
+
+				if _, dbErr = db.New().CreateStrategy(gbl.Id, strategyName, meta.Id, s.Properties); dbErr != nil {
+					log.Error("fail to create strategy: ", dbErr.Error())
+					err = dbErr
+					return
+				}
 			}
 		}
 	}
@@ -42,7 +53,7 @@ func CreateGamblers(simulation collection.Simulation) (err error) {
 	return
 }
 
-func LoadGamblers(simulationId string) (err error){
+func LoadGamblers(simulationId string) (err error) {
 	log.Debug("load gamblers with simulation id: ", simulationId)
 
 	sId, oErr := primitive.ObjectIDFromHex(simulationId)
