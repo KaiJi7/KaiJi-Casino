@@ -154,13 +154,13 @@ func GetGamblers(simulationId *primitive.ObjectID) (gamblers []Gambler, err erro
 	}
 
 	for _, gamblerData := range gamblersData {
-		strategyData, dbErr := db.New().GetStrategy(gamblerData.Id)
+		strategyData, dbErr := db.New().GetStrategyData(gamblerData.Id)
 		if dbErr != nil {
 			log.Error("fail to get strategyData: ", dbErr.Error())
 			err = dbErr
 			return
 		}
-		stg, sErr := strategy.GetStrategy(strategyData)
+		stg, sErr := strategy.GenStrategy(strategyData)
 		if sErr != nil {
 			log.Error("gail to init strategy: ", sErr.Error())
 			err = sErr

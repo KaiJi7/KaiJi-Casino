@@ -1,2 +1,6 @@
-LowerResponse: 3
-LowestResponse: 3
+lowerResponse:
+  - quantity: 1
+    properties:
+lowestResponse:
+  - quantity: 1
+    properties:

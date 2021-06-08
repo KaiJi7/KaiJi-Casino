@@ -22,7 +22,9 @@ var (
 			configs.New()
 			log.Debug("read strategy schema file at: ", c.Path("strategy-schema"))
 
-			simulation, dbErr := db.New().CreateSimulation(readSchema(c.Path("strategy-schema")), c.Float64("initial-money"))
+			schemaFilePath := c.Path("strategy-schema")
+			gamblerInitialMoney := c.Float64("initial-money")
+			simulation, dbErr := db.New().CreateSimulation(readSchema(schemaFilePath, gamblerInitialMoney))
 			if dbErr != nil {
 				log.Error("fail to create simulation: ", dbErr.Error())
 				err = dbErr
@@ -63,7 +65,7 @@ var (
 	}
 )
 
-func readSchema(path string) (schema map[collection.StrategyName]int) {
+func readSchema(path string, initialMoney float64) (schema collection.Simulation) {
 	file, err := os.Open(path)
 	if err != nil {
 		panic(err)
@@ -71,18 +73,20 @@ func readSchema(path string) (schema map[collection.StrategyName]int) {
 	defer file.Close()
 	d := yaml.NewDecoder(file)
 
-	if err := d.Decode(&schema); err != nil {
+	if err := d.Decode(&schema.StrategySchema); err != nil {
 		panic(err)
 	}
 
 	if !validateSchema(schema) {
 		log.Panic("invalid schema")
 	}
+
+	schema.GamblerInitialMoney = initialMoney
 	return
 }
 
-func validateSchema(schema map[collection.StrategyName]int) bool {
-	for s, _ := range schema {
+func validateSchema(schema collection.Simulation) bool {
+	for s, _ := range schema.StrategySchema {
 		if _, exist := strategy.NameMap[s]; !exist {
 			log.Error("unsupported schema: ", s)
 			return false
