@@ -10,7 +10,7 @@ import (
 	"sync"
 )
 
-const (
+var (
 	defaultConfigPath = "configs/config.yaml"
 )
 
@@ -97,4 +97,8 @@ func (c *config) initLog() {
 	log.SetFormatter(customFormatter)
 	log.SetReportCaller(true)
 	log.Debug("logger initialized")
+}
+
+func SetConfigPath(path string) {
+	defaultConfigPath = path
 }

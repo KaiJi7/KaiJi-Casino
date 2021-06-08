@@ -45,8 +45,9 @@ func (c client) GetStrategyMetaData(name collection.StrategyName) (strategyMeta 
 	filter := bson.M{
 		"name": name,
 	}
-	if err := c.Strategy.FindOne(nil, filter).Decode(&strategyMeta); err != nil {
+	if err := c.StrategyMeta.FindOne(nil, filter).Decode(&strategyMeta); err != nil {
 		log.Error("fail to get strategy meta: ", name, ". ", err.Error())
+		panic(err.Error())
 	}
 	return
 }

@@ -14,5 +14,5 @@ type Decision struct {
 }
 
 func (d Decision) String() string {
-	return fmt.Sprintf("Id: %s, Bet: %s, Put: %d", d.Id.Hex(), d.Bet, &d.Put)
+	return fmt.Sprintf("Bet: %s, Put: %d", d.Bet, &d.Put)
 }

@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"KaiJi-Casino/internal/pkg/configs"
 	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy"
 	"github.com/urfave/cli/v2"
@@ -14,7 +15,6 @@ var (
 			Properties:  nil,
 		},
 		{
-
 			Name:        collection.StrategyNameLowestResponse,
 			Description: "Bet a game with the lowest odds.",
 			Properties:  nil,
@@ -26,6 +26,7 @@ var (
 		Usage: "Create meta strategy",
 		Aliases: []string{"cm"},
 		Action: func(c *cli.Context) error {
+			configs.New()
 			for _, m := range metaStrategies {
 				if err := strategy.CreateMetaStrategy(m); err != nil {
 					return err
