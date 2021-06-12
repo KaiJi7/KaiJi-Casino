@@ -14,6 +14,8 @@ func TestStrategy_MakeDecision(t *testing.T) {
 			"threshold": 0.5,
 		},
 	}
+
+	_ = data
 	// TODO: implement test
 	//gambles := collection.Gambling{
 	//

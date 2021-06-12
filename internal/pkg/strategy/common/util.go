@@ -7,12 +7,12 @@ import (
 )
 
 const (
-	ConfidenceTypeLinear   = "linear"
-	ConfidenceTypeWeighted = "weighted"
+	ConfidenceTypeLinear   ConfidenceType = "linear"
+	ConfidenceTypeWeighted ConfidenceType = "weighted"
 )
 
 var (
-	calculator = map[ConfidenceType]func(betting collection.Betting) (collection.Bet, float64){
+	Calculator = map[ConfidenceType]func(betting collection.Betting) (collection.Bet, float64){
 		ConfidenceTypeLinear:   linearConfidence,
 		ConfidenceTypeWeighted: weightedConfidence,
 	}
@@ -22,7 +22,7 @@ type ConfidenceType string
 
 func GetConfidence(betsInfo collection.Betting, confidenceType ConfidenceType) (side collection.Bet, confidence float64) {
 	log.Debug("get confidence of bets: ", betsInfo.Id.Hex(), ", type: ", confidenceType)
-	return calculator[confidenceType](betsInfo)
+	return Calculator[confidenceType](betsInfo)
 }
 
 // Calculate bets confidence by the quantity ratio of all, 0 < confidence < 1

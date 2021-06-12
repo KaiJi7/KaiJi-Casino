@@ -4,6 +4,7 @@ import (
 	"KaiJi-Casino/internal/pkg/db"
 	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy/common"
+	"KaiJi-Casino/internal/pkg/strategy/confidenceBase"
 	"KaiJi-Casino/internal/pkg/strategy/lowerResponse"
 	"KaiJi-Casino/internal/pkg/strategy/lowestResponse"
 	"fmt"
@@ -13,6 +14,7 @@ import (
 var NameMap = map[collection.StrategyName]func(data collection.StrategyData) common.Strategy{
 	collection.StrategyNameLowerResponse:  lowerResponse.New,
 	collection.StrategyNameLowestResponse: lowestResponse.New,
+	collection.StrategyNameConfidenceBase: confidenceBase.New,
 }
 
 func GenStrategy(strategyData collection.StrategyData) (strategy common.Strategy, err error) {

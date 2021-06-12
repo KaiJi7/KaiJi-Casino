@@ -14,9 +14,17 @@ type Strategy struct {
 }
 
 func New(data collection.StrategyData) common.Strategy {
+
+	cts := data.Properties["confidence_type"].(string)
+	ct := common.ConfidenceType(cts)
+	if _, exist := common.Calculator[ct]; !exist {
+		log.Error("invalid confidence type: ", ct)
+		panic("invalid confidence type")
+	}
+
 	return Strategy{
 		StrategyData:   data,
-		confidenceType: data.Properties["confidence_type"].(common.ConfidenceType),
+		confidenceType: ct,
 		threshold:      data.Properties["threshold"].(float64),
 	}
 }
