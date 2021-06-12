@@ -24,5 +24,6 @@ func initCommand() []*cli.Command {
 		createMetaStrategy,
 		newSimulation,
 		resumeSimulation,
+		dropSimulation,
 	}
 }
