@@ -36,6 +36,23 @@ var (
 				},
 			},
 		},
+		{
+			Name:        collection.StrategyNameMostConfidence,
+			Description: "Bet games based on confidence, where the confidence was based on vote quantity.",
+			Properties: []struct {
+				Name string `json:"name" bson:"name"`
+				Type string `json:"type" bson:"type"` // int, float, string
+			}{
+				{
+					Name: "threshold",
+					Type: "float",
+				},
+				{
+					Name: "limit",
+					Type: "int",
+				},
+			},
+		},
 	}
 
 	createMetaStrategy = &cli.Command{
