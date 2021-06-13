@@ -19,11 +19,45 @@ var (
 			Description: "Bet a game with the lowest odds.",
 			Properties:  nil,
 		},
+		{
+			Name:        collection.StrategyNameConfidenceBase,
+			Description: "Bet games based on confidence, where the confidence was based on the vote quantity.",
+			Properties: []struct {
+				Name string `json:"name" bson:"name"`
+				Type string `json:"type" bson:"type"` // int, float, string
+			}{
+				{
+					Name: "confidence_type",
+					Type: "string",
+				},
+				{
+					Name: "threshold",
+					Type: "float",
+				},
+			},
+		},
+		{
+			Name:        collection.StrategyNameMostConfidence,
+			Description: "Bet games based on confidence, where the confidence was based on the vote quantity, ",
+			Properties: []struct {
+				Name string `json:"name" bson:"name"`
+				Type string `json:"type" bson:"type"` // int, float, string
+			}{
+				{
+					Name: "threshold",
+					Type: "float",
+				},
+				{
+					Name: "limit",
+					Type: "int",
+				},
+			},
+		},
 	}
 
 	createMetaStrategy = &cli.Command{
-		Name: "create-meta-strategy",
-		Usage: "Create meta strategy",
+		Name:    "create-meta-strategy",
+		Usage:   "Create meta strategy",
 		Aliases: []string{"cm"},
 		Action: func(c *cli.Context) error {
 			configs.New()

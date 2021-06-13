@@ -7,6 +7,8 @@ import (
 const (
 	StrategyNameLowerResponse  StrategyName = "lowerResponse"
 	StrategyNameLowestResponse StrategyName = "lowestResponse"
+	StrategyNameConfidenceBase StrategyName = "confidenceBase"
+	StrategyNameMostConfidence StrategyName = "mostConfidence"
 )
 
 type StrategyName string
