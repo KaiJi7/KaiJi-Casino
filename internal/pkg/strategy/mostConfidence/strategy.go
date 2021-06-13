@@ -47,13 +47,10 @@ func (s Strategy) MakeDecision(gambles []collection.Gambling) []collection.Decis
 					Bet:        side,
 					Put:        1,
 				}
-				//decisions[0] = decision
-				//confidenceData[0] = confidence
 				decisions = append(decisions, decision)
 				confidenceData = append(confidenceData, confidence)
 			}
 			decisions, confidenceData = sortDecisionByConfidence(decisions, confidenceData)
-
 		}
 	}
 	return decisions

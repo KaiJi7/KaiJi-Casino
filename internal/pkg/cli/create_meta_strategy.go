@@ -21,7 +21,7 @@ var (
 		},
 		{
 			Name:        collection.StrategyNameConfidenceBase,
-			Description: "Bet games based on confidence, where the confidence was based on vote quantity.",
+			Description: "Bet games based on confidence, where the confidence was based on the vote quantity.",
 			Properties: []struct {
 				Name string `json:"name" bson:"name"`
 				Type string `json:"type" bson:"type"` // int, float, string
@@ -38,7 +38,7 @@ var (
 		},
 		{
 			Name:        collection.StrategyNameMostConfidence,
-			Description: "Bet games based on confidence, where the confidence was based on vote quantity.",
+			Description: "Bet games based on confidence, where the confidence was based on the vote quantity, ",
 			Properties: []struct {
 				Name string `json:"name" bson:"name"`
 				Type string `json:"type" bson:"type"` // int, float, string
