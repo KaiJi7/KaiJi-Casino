@@ -40,17 +40,21 @@ func (s Strategy) MakeDecision(gambles []collection.Gambling) []collection.Decis
 		for _, bets := range betsInfo {
 			side, confidence := common.GetConfidence(bets, common.ConfidenceTypeLinear)
 
-			if len(decisions) < s.Limit || confidenceData[0] < confidence {
-				decision := collection.Decision{
-					StrategyId: s.Id,
-					GambleId:   gamble.Id,
-					Bet:        side,
-					Put:        1,
-				}
+			decision := collection.Decision{
+				StrategyId: s.Id,
+				GambleId:   gamble.Id,
+				Bet:        side,
+				Put:        1,
+			}
+
+			if len(decisions) < s.Limit  {
 				decisions = append(decisions, decision)
 				confidenceData = append(confidenceData, confidence)
+			} else if confidenceData[0] < confidence {
+				decisions[0] = decision
+				confidenceData[0] = confidence
+				decisions, confidenceData = sortDecisionByConfidence(decisions, confidenceData)
 			}
-			decisions, confidenceData = sortDecisionByConfidence(decisions, confidenceData)
 		}
 	}
 	return decisions
