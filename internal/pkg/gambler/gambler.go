@@ -27,14 +27,12 @@ type Gambler struct {
 }
 
 // PlaySince plays gamble with latest n days game
-func (g Gambler) PlaySince(wg *sync.WaitGroup, days int) {
+func (g *Gambler) PlaySince(wg *sync.WaitGroup, days int) {
 	defer wg.Done()
-
-	// get games which use to gamble
-	gamesToGamble := make([]collection.SportsGameInfo, 0)
 
 	// for each day since n days before
 	for d := -days; d < 0; d++ {
+		gamesToGamble := make([]collection.SportsGameInfo, 0)
 
 		select {
 		case <-brokenChan:
@@ -50,7 +48,7 @@ func (g Gambler) PlaySince(wg *sync.WaitGroup, days int) {
 	}
 }
 
-func (g Gambler) play(games []collection.SportsGameInfo) {
+func (g *Gambler) play(games []collection.SportsGameInfo) {
 	log.Debug(fmt.Sprintf("gambler [%s] play %d games", g.Id.Hex(), len(games)))
 
 	// get gambles info

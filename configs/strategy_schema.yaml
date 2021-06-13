@@ -1,6 +1,16 @@
-lowerResponse:
+#lowerResponse:
+#  - quantity: 1
+#    properties:
+#lowestResponse:
+#  - quantity: 1
+#    properties:
+#confidenceBase:
+#  - quantity: 1
+#    properties:
+#      confidence_type: "linear"
+#      threshold: 0.8
+mostConfidence:
   - quantity: 1
     properties:
-lowestResponse:
-  - quantity: 1
-    properties:
+      threshold: 0.8
+      limit: 3

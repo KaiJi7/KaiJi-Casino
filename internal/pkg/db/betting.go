@@ -10,7 +10,7 @@ import (
 func (c client) GetBets(filter bson.M, option *options.FindOptions) (documents []collection.Betting, err error) {
 	log.Debug("get gambles")
 
-	cursor, dbErr := c.Gambling.Find(nil, filter, option)
+	cursor, dbErr := c.Betting.Find(nil, filter, option)
 	if dbErr != nil {
 		log.Error("fail to get document: ", dbErr.Error())
 		err = dbErr
