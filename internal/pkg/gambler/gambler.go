@@ -2,9 +2,9 @@ package gambler
 
 import (
 	"KaiJi-Casino/internal/pkg/banker"
-	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy/common"
 	"fmt"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"sync"
 	"time"
@@ -19,7 +19,7 @@ var (
 )
 
 type Gambler struct {
-	collection.GamblerData
+	structs.GamblerData
 	Strategy common.Strategy
 }
 
@@ -29,7 +29,7 @@ func (g *Gambler) PlaySince(wg *sync.WaitGroup, days int) {
 
 	// for each day since n days before
 	for d := -days; d < 0; d++ {
-		gamesToGamble := make([]collection.SportsGameInfo, 0)
+		gamesToGamble := make([]structs.SportsGameInfo, 0)
 
 		select {
 		case <-brokenChan:
@@ -45,11 +45,11 @@ func (g *Gambler) PlaySince(wg *sync.WaitGroup, days int) {
 	}
 }
 
-func (g *Gambler) play(games []collection.SportsGameInfo) {
+func (g *Gambler) play(games []structs.SportsGameInfo) {
 	log.Debug(fmt.Sprintf("gambler [%s] play %d games", g.Id.Hex(), len(games)))
 
 	// get gambles info
-	gambles := make([]collection.Gambling, 0)
+	gambles := make([]structs.Gambling, 0)
 	for _, game := range games {
 		gambles = append(gambles, banker.New().GetGambles(game.Id)...)
 	}

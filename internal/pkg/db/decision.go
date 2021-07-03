@@ -1,7 +1,7 @@
 package db
 
 import (
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -18,7 +18,7 @@ func (g getDecisionFilter) toBson() (filter bson.M) {
 	return
 }
 
-func (c client) GetDecisions(strategyId *primitive.ObjectID, gambleId *primitive.ObjectID) (decisions []collection.Decision, err error) {
+func (c client) GetDecisions(strategyId *primitive.ObjectID, gambleId *primitive.ObjectID) (decisions []structs.Decision, err error) {
 	filter := getDecisionFilter{
 		StrategyId: strategyId,
 		GambleId:   gambleId,
@@ -37,7 +37,7 @@ func (c client) GetDecisions(strategyId *primitive.ObjectID, gambleId *primitive
 	return
 }
 
-func (c client) SaveDecision(decision collection.Decision) (document collection.Decision, err error) {
+func (c client) SaveDecision(decision structs.Decision) (document structs.Decision, err error) {
 	res, dbErr := c.Decision.InsertOne(nil, decision)
 	if dbErr != nil {
 		log.Error("fail to insert document: ", dbErr.Error())

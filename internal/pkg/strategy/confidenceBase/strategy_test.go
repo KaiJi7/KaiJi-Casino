@@ -7,8 +7,8 @@ import (
 )
 
 func TestStrategy_MakeDecision(t *testing.T) {
-	data := collection.StrategyData{
-		Name: collection.StrategyNameConfidenceBase,
+	data := structs.StrategyData{
+		Name: structs.StrategyNameConfidenceBase,
 		Properties: map[string]interface{}{
 			"confidence_type": common.ConfidenceTypeLinear,
 			"threshold": 0.5,
@@ -17,7 +17,7 @@ func TestStrategy_MakeDecision(t *testing.T) {
 
 	_ = data
 	// TODO: implement test
-	//gambles := collection.Gambling{
+	//gambles := structs.Gambling{
 	//
 	//}
 	//

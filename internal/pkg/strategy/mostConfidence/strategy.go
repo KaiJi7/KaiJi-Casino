@@ -2,19 +2,19 @@ package mostConfidence
 
 import (
 	"KaiJi-Casino/internal/pkg/banker"
-	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy/common"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"sort"
 )
 
 type Strategy struct {
-	collection.StrategyData
+	structs.StrategyData
 	Threshold float64
 	Limit     int
 }
 
-func New(data collection.StrategyData) common.Strategy {
+func New(data structs.StrategyData) common.Strategy {
 
 	return Strategy{
 		StrategyData: data,
@@ -23,12 +23,12 @@ func New(data collection.StrategyData) common.Strategy {
 	}
 }
 
-func (s Strategy) TargetGameType() []collection.GameType {
-	return []collection.GameType{collection.GameTypeAll}
+func (s Strategy) TargetGameType() []structs.GameType {
+	return []structs.GameType{structs.GameTypeAll}
 }
 
-func (s Strategy) MakeDecision(gambles []collection.Gambling) []collection.Decision {
-	decisions := make([]collection.Decision, 0, s.Limit)
+func (s Strategy) MakeDecision(gambles []structs.Gambling) []structs.Decision {
+	decisions := make([]structs.Decision, 0, s.Limit)
 	confidenceData := make([]float64, 0, s.Limit)
 	for _, gamble := range gambles {
 		betsInfo, err := banker.New().GetBettings(gamble.Id)
@@ -40,7 +40,7 @@ func (s Strategy) MakeDecision(gambles []collection.Gambling) []collection.Decis
 		for _, bets := range betsInfo {
 			side, confidence := common.GetConfidence(bets, common.ConfidenceTypeLinear)
 
-			decision := collection.Decision{
+			decision := structs.Decision{
 				StrategyId: s.Id,
 				GambleId:   gamble.Id,
 				Bet:        side,
@@ -60,24 +60,24 @@ func (s Strategy) MakeDecision(gambles []collection.Gambling) []collection.Decis
 	return decisions
 }
 
-func (s Strategy) OnWin(decision collection.Decision) {
+func (s Strategy) OnWin(decision structs.Decision) {
 
 }
 
-func (s Strategy) OnLose(decision collection.Decision) {
+func (s Strategy) OnLose(decision structs.Decision) {
 
 }
 
-func (s Strategy) OnTie(decision collection.Decision) {
+func (s Strategy) OnTie(decision structs.Decision) {
 
 }
 
 type dc struct {
-	decision   collection.Decision
+	decision   structs.Decision
 	confidence float64
 }
 
-func sortDecisionByConfidence(decisions []collection.Decision, confidenceData []float64) (sortedDecisions []collection.Decision, sortedConfidence []float64) {
+func sortDecisionByConfidence(decisions []structs.Decision, confidenceData []float64) (sortedDecisions []structs.Decision, sortedConfidence []float64) {
 	comb := make([]dc, len(decisions))
 	for i, decision := range decisions {
 		comb[i] = dc{

@@ -1,7 +1,7 @@
 package common
 
 import (
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"math"
 )
@@ -12,7 +12,7 @@ const (
 )
 
 var (
-	Calculator = map[ConfidenceType]func(betting collection.Betting) (collection.Bet, float64){
+	Calculator = map[ConfidenceType]func(betting structs.Betting) (structs.Bet, float64){
 		ConfidenceTypeLinear:   linearConfidence,
 		ConfidenceTypeWeighted: weightedConfidence,
 	}
@@ -20,13 +20,13 @@ var (
 
 type ConfidenceType string
 
-func GetConfidence(betsInfo collection.Betting, confidenceType ConfidenceType) (side collection.Bet, confidence float64) {
+func GetConfidence(betsInfo structs.Betting, confidenceType ConfidenceType) (side structs.Bet, confidence float64) {
 	log.Debug("get confidence of bets: ", betsInfo.Id.Hex(), ", type: ", confidenceType)
 	return Calculator[confidenceType](betsInfo)
 }
 
 // Calculate bets confidence by the quantity ratio of all, 0 < confidence < 1
-func linearConfidence(betsInfo collection.Betting) (side collection.Bet, confidence float64) {
+func linearConfidence(betsInfo structs.Betting) (side structs.Bet, confidence float64) {
 	sum := 0.0
 	for _, b := range betsInfo.Bet {
 		sum += float64(b.Quantity)
@@ -41,7 +41,7 @@ func linearConfidence(betsInfo collection.Betting) (side collection.Bet, confide
 	return
 }
 
-func weightedConfidence(betsInfo collection.Betting) (side collection.Bet, confidence float64) {
+func weightedConfidence(betsInfo structs.Betting) (side structs.Bet, confidence float64) {
 	sum := 0.0
 	for _, b := range betsInfo.Bet {
 		sum += float64(b.Quantity)

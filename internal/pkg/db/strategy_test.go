@@ -1,16 +1,15 @@
 package db
 
 import (
-	"KaiJi-Casino/internal/pkg/configs"
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
+	"github.com/spf13/viper"
 	"testing"
 )
 
 func TestClient_GetStrategyMetaData(t *testing.T) {
-	configPath := "../../../configs/config.yaml"
-	configs.SetConfigPath(configPath)
+	viper.AddConfigPath("../../../configs")
 	client := New()
-	m, e := client.GetStrategyMetaData(collection.StrategyNameLowerResponse)
+	m, e := client.GetStrategyMetaData(structs.StrategyNameLowerResponse)
 	if e != nil {
 		t.Error(e.Error())
 	}

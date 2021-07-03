@@ -1,13 +1,13 @@
 package db
 
 import (
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (c *client) GetHistory(filter bson.M, option *options.FindOptions) (history []collection.GambleHistory, err error) {
+func (c *client) GetHistory(filter bson.M, option *options.FindOptions) (history []structs.GambleHistory, err error) {
 	log.Debug("get gamble history")
 
 	cursor, dbErr := c.GambleHistory.Find(nil, filter, option)
@@ -23,7 +23,7 @@ func (c *client) GetHistory(filter bson.M, option *options.FindOptions) (history
 	return
 }
 
-func (c client) SaveHistory(history collection.GambleHistory) (err error) {
+func (c client) SaveHistory(history structs.GambleHistory) (err error) {
 	_, err = c.GambleHistory.InsertOne(nil, history)
 	return
 }

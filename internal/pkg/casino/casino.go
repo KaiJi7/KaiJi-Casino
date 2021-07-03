@@ -2,9 +2,9 @@ package casino
 
 import (
 	"KaiJi-Casino/internal/pkg/db"
-	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/gambler"
 	"KaiJi-Casino/internal/pkg/strategy"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"sync"
@@ -12,9 +12,9 @@ import (
 
 var Gamblers []gambler.Gambler
 
-//var strategies []collection.StrategyData
+//var strategies []structs.StrategyData
 
-func CreateGamblers(simulation collection.Simulation) (err error) {
+func CreateGamblers(simulation structs.Simulation) (err error) {
 	log.Debug("create gamblers: ", simulation.String())
 
 	for strategyName, schema := range simulation.StrategySchema {

@@ -2,19 +2,19 @@ package banker
 
 import (
 	"KaiJi-Casino/internal/pkg/db"
-	"KaiJi-Casino/internal/pkg/db/collection"
 	"fmt"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Judge struct {
 	DecisionId *primitive.ObjectID
-	Winner     collection.GambleWinner
+	Winner     structs.GambleWinner
 	Reward     float64
 }
 
-func (b banker) Judge(decision collection.Decision) (judge Judge, err error) {
+func (b banker) Judge(decision structs.Decision) (judge Judge, err error) {
 	log.Debug("judge")
 
 	gambling, err := db.New().GetGambling(decision.GambleId)
@@ -33,16 +33,16 @@ func (b banker) Judge(decision collection.Decision) (judge Judge, err error) {
 
 	// TODO: consider tie
 	if res == decision.Bet {
-		judge.Winner = collection.GambleWinnerGambler
+		judge.Winner = structs.GambleWinnerGambler
 		judge.Reward = odds * decision.Put
 	} else {
-		judge.Winner = collection.GambleWinnerBanker
+		judge.Winner = structs.GambleWinnerBanker
 		judge.Reward = 0
 	}
 	return
 }
 
-func (b banker) gamblingResult(gambling collection.Gambling) (result collection.Bet, odds float64, err error) {
+func (b banker) gamblingResult(gambling structs.Gambling) (result structs.Bet, odds float64, err error) {
 	log.Debug("get gambling result: ", gambling.Id)
 
 	game, err := db.New().GetGame(gambling.GameId)
@@ -53,16 +53,16 @@ func (b banker) gamblingResult(gambling collection.Gambling) (result collection.
 
 	// TODO: refine design
 	switch gambling.Type {
-	case collection.GamblingTypeOriginal:
+	case structs.GamblingTypeOriginal:
 		if game.Guest.Score < game.Host.Score {
-			result = collection.BetHost
+			result = structs.BetHost
 		} else if game.Guest.Score > game.Host.Score {
-			result = collection.BetGuest
+			result = structs.BetGuest
 		} else {
-			result = collection.BetTie
+			result = structs.BetTie
 		}
 
-	case collection.GamblingTypeSpreadPoint:
+	case structs.GamblingTypeSpreadPoint:
 		gsp := gambling.GetProperty("guest_spread_point").(float64)
 		hsp := gambling.GetProperty("host_spread_point").(float64)
 
@@ -70,22 +70,22 @@ func (b banker) gamblingResult(gambling collection.Gambling) (result collection.
 		hsc := float64(game.Host.Score) + hsp
 
 		if gsc < hsc {
-			result = collection.BetHost
+			result = structs.BetHost
 		} else if gsc > hsc {
-			result = collection.BetGuest
+			result = structs.BetGuest
 		} else {
-			result = collection.BetTie
+			result = structs.BetTie
 		}
 
-	case collection.GamblingTypeTotalScore:
+	case structs.GamblingTypeTotalScore:
 		threshold := gambling.GetProperty("threshold").(float64)
 		totalScore := float64(game.Guest.Score + game.Host.Score)
 		if totalScore < threshold {
-			result = collection.BetUnder
+			result = structs.BetUnder
 		} else if totalScore > threshold {
-			result = collection.BetOver
+			result = structs.BetOver
 		} else {
-			result = collection.BetEqual
+			result = structs.BetEqual
 		}
 	default:
 		log.Warn("unhandled gambling type: ", gambling.Type)

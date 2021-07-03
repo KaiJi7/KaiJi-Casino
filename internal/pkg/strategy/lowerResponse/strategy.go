@@ -1,34 +1,34 @@
 package lowerResponse
 
 import (
-	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy/common"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 )
 
 type Strategy struct {
-	collection.StrategyData
+	structs.StrategyData
 }
 
-func New(data collection.StrategyData) common.Strategy {
+func New(data structs.StrategyData) common.Strategy {
 	return Strategy{
 		data,
 	}
 }
 
-func (s Strategy) TargetGameType() []collection.GameType {
-	return []collection.GameType{collection.GameTypeAll}
+func (s Strategy) TargetGameType() []structs.GameType {
+	return []structs.GameType{structs.GameTypeAll}
 }
 
-func (s Strategy) MakeDecision(gambles []collection.Gambling) []collection.Decision {
-	decisions := make([]collection.Decision, 0)
+func (s Strategy) MakeDecision(gambles []structs.Gambling) []structs.Decision {
+	decisions := make([]structs.Decision, 0)
 	for _, gamble := range gambles {
 		if !gamble.Betable() {
 			log.Info("unbetable gamble: ", gamble.Id.Hex())
 			continue
 		}
 
-		decision := collection.Decision{
+		decision := structs.Decision{
 			StrategyId: s.Id,
 			GambleId:   gamble.Id,
 			Bet:        gamble.SortedOdds()[0].Bet,
@@ -39,14 +39,14 @@ func (s Strategy) MakeDecision(gambles []collection.Gambling) []collection.Decis
 	return decisions
 }
 
-func (s Strategy) OnWin(decision collection.Decision) {
+func (s Strategy) OnWin(decision structs.Decision) {
 
 }
 
-func (s Strategy) OnLose(decision collection.Decision) {
+func (s Strategy) OnLose(decision structs.Decision) {
 
 }
 
-func (s Strategy) OnTie(decision collection.Decision) {
+func (s Strategy) OnTie(decision structs.Decision) {
 
 }

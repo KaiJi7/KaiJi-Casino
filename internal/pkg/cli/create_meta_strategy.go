@@ -2,25 +2,25 @@ package cli
 
 import (
 	"KaiJi-Casino/internal/pkg/configs"
-	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy"
+	"github.com/KaiJi7/common/structs"
 	"github.com/urfave/cli/v2"
 )
 
 var (
-	metaStrategies = []collection.StrategyMeta{
+	metaStrategies = []structs.StrategyMeta{
 		{
-			Name:        collection.StrategyNameLowerResponse,
+			Name:        structs.StrategyNameLowerResponse,
 			Description: "Bet each games with lower odds.",
 			Properties:  nil,
 		},
 		{
-			Name:        collection.StrategyNameLowestResponse,
+			Name:        structs.StrategyNameLowestResponse,
 			Description: "Bet a game with the lowest odds.",
 			Properties:  nil,
 		},
 		{
-			Name:        collection.StrategyNameConfidenceBase,
+			Name:        structs.StrategyNameConfidenceBase,
 			Description: "Bet games based on confidence, where the confidence was based on the vote quantity.",
 			Properties: []struct {
 				Name string `json:"name" bson:"name"`
@@ -37,7 +37,7 @@ var (
 			},
 		},
 		{
-			Name:        collection.StrategyNameMostConfidence,
+			Name:        structs.StrategyNameMostConfidence,
 			Description: "Bet games based on confidence, where the confidence was based on the vote quantity, ",
 			Properties: []struct {
 				Name string `json:"name" bson:"name"`

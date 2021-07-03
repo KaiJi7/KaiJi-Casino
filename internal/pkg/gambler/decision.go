@@ -3,11 +3,11 @@ package gambler
 import (
 	"KaiJi-Casino/internal/pkg/banker"
 	"KaiJi-Casino/internal/pkg/db"
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 )
 
-func (g *Gambler) makeDecision(gambles []collection.Gambling) (decisions []collection.Decision) {
+func (g *Gambler) makeDecision(gambles []structs.Gambling) (decisions []structs.Decision) {
 	allDecisions := g.Strategy.MakeDecision(gambles)
 
 	for _, decision := range allDecisions {
@@ -30,7 +30,7 @@ func (g *Gambler) makeDecision(gambles []collection.Gambling) (decisions []colle
 	return
 }
 
-func (g *Gambler) handleDecision(decisions []collection.Decision) {
+func (g *Gambler) handleDecision(decisions []structs.Decision) {
 	log.Debug("handle decision")
 
 	bk := banker.New()
@@ -41,25 +41,25 @@ func (g *Gambler) handleDecision(decisions []collection.Decision) {
 			continue
 		}
 
-		hist := collection.GambleHistory{
+		hist := structs.GambleHistory{
 			DecisionId: decision.Id,
 			Winner: judge.Winner,
 			MoneyBefore: g.MoneyCurrent,
 		}
 
 		switch judge.Winner {
-		case collection.GambleWinnerGambler:
+		case structs.GambleWinnerGambler:
 			g.MoneyCurrent += judge.Reward
 			g.Strategy.OnWin(decision)
 
-		case collection.GambleWinnerBanker:
+		case structs.GambleWinnerBanker:
 			if g.MoneyCurrent < BrokenThreshold {
 				g.OnBroken()
 				continue
 			}
 			g.Strategy.OnLose(decision)
 
-		case collection.GambleWinnerTie:
+		case structs.GambleWinnerTie:
 			g.Strategy.OnTie(decision)
 
 		default:
