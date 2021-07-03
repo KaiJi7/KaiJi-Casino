@@ -1,14 +1,14 @@
 package db
 
 import (
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (c client) CreateGambler(simulationId *primitive.ObjectID, moneyBegin float64) (gambler collection.GamblerData, err error) {
-	gambler = collection.GamblerData{
+func (c client) CreateGambler(simulationId *primitive.ObjectID, moneyBegin float64) (gambler structs.GamblerData, err error) {
+	gambler = structs.GamblerData{
 		SimulationId: simulationId,
 		MoneyBegin:   moneyBegin,
 		MoneyCurrent: moneyBegin,
@@ -23,7 +23,7 @@ func (c client) CreateGambler(simulationId *primitive.ObjectID, moneyBegin float
 	return
 }
 
-func (c client) ListGambler(simulationId *primitive.ObjectID) (gamblers []collection.GamblerData, err error) {
+func (c client) ListGambler(simulationId *primitive.ObjectID) (gamblers []structs.GamblerData, err error) {
 	filter := bson.M{
 		"simulation_id": simulationId,
 	}

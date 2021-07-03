@@ -10,6 +10,7 @@ import (
 
 type client struct {
 	*mongo.Client
+	User          *mongo.Collection
 	Decision      *mongo.Collection
 	Game          *mongo.Collection
 	Gambling      *mongo.Collection
@@ -35,6 +36,7 @@ func New() *client {
 		db := c.Database(configs.New().Mongo.Db)
 		instance = &client{
 			Client:        c,
+			User:          db.Collection("user"),
 			Game:          db.Collection("game"),
 			Decision:      db.Collection("decision"),
 			Gambling:      db.Collection("gambling"),

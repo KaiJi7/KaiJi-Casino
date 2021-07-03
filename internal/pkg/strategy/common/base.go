@@ -1,15 +1,15 @@
 package common
 
 import (
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
 )
 
 type Strategy interface {
-	MakeDecision(gambles []collection.Gambling) []collection.Decision
-	TargetGameType() []collection.GameType
+	MakeDecision(gambles []structs.Gambling) []structs.Decision
+	TargetGameType() []structs.GameType
 
 	// for strategies to update their arguments based on gamble result
-	OnWin(decision collection.Decision)
-	OnLose(decision collection.Decision)
-	OnTie(decision collection.Decision)
+	OnWin(decision structs.Decision)
+	OnLose(decision structs.Decision)
+	OnTie(decision structs.Decision)
 }

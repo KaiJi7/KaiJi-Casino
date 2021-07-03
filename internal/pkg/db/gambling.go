@@ -1,14 +1,14 @@
 package db
 
 import (
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (c client) GetGambling(gamblingId *primitive.ObjectID) (gambling collection.Gambling, err error) {
+func (c client) GetGambling(gamblingId *primitive.ObjectID) (gambling structs.Gambling, err error) {
 	log.Debug("get gambling: ", gamblingId.Hex())
 	filter := bson.M{
 		"_id": gamblingId,
@@ -17,7 +17,7 @@ func (c client) GetGambling(gamblingId *primitive.ObjectID) (gambling collection
 	return
 }
 
-func (c client) GetGambles(filter bson.M, option *options.FindOptions) (documents []collection.Gambling, err error) {
+func (c client) GetGambles(filter bson.M, option *options.FindOptions) (documents []structs.Gambling, err error) {
 	log.Debug("get gambles")
 
 	cursor, dbErr := c.Gambling.Find(nil, filter, option)

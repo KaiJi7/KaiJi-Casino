@@ -2,14 +2,14 @@ package banker
 
 import (
 	"KaiJi-Casino/internal/pkg/db"
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
-func (b banker) GetTodayGames(gameType collection.GameType) []collection.SportsGameInfo {
+func (b banker) GetTodayGames(gameType structs.GameType) []structs.SportsGameInfo {
 	log.Debug("get today games")
 
 	filter := bson.M{
@@ -28,11 +28,11 @@ func (b banker) GetTodayGames(gameType collection.GameType) []collection.SportsG
 	return games
 }
 
-func (b banker) GetGames(gameType collection.GameType, begin time.Time, end time.Time) []collection.SportsGameInfo {
+func (b banker) GetGames(gameType structs.GameType, begin time.Time, end time.Time) []structs.SportsGameInfo {
 	log.Debug("get games")
 
 	var filter bson.M
-	if gameType != collection.GameTypeAll {
+	if gameType != structs.GameTypeAll {
 		filter = bson.M{
 			"type": gameType,
 			"start_time": bson.M{
@@ -58,7 +58,7 @@ func (b banker) GetGames(gameType collection.GameType, begin time.Time, end time
 	return games
 }
 
-func (b banker) GetGambles(gameId *primitive.ObjectID) []collection.Gambling {
+func (b banker) GetGambles(gameId *primitive.ObjectID) []structs.Gambling {
 	log.Debug("get gambles")
 
 	filter := bson.M{
@@ -74,7 +74,7 @@ func (b banker) GetGambles(gameId *primitive.ObjectID) []collection.Gambling {
 	return gambles
 }
 
-func (b banker) GetBettings(gamblingId *primitive.ObjectID) (bets []collection.Betting, err error) {
+func (b banker) GetBettings(gamblingId *primitive.ObjectID) (bets []structs.Betting, err error) {
 	log.Debug("get bets")
 
 	filter := bson.M{

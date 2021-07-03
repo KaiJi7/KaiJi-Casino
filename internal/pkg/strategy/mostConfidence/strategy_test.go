@@ -7,7 +7,7 @@ import (
 )
 
 func Test_sortDecisionByConfidence(t *testing.T) {
-	decisions := []collection.Decision{
+	decisions := []structs.Decision{
 		{
 			Put: 1.0,
 		},
@@ -20,7 +20,7 @@ func Test_sortDecisionByConfidence(t *testing.T) {
 	}
 	confidenceData := []float64{3, 2, 1}
 
-	expected := []collection.Decision{
+	expected := []structs.Decision{
 		{
 			Put: 3.0,
 		},
@@ -43,19 +43,19 @@ func Test_sortDecisionByConfidence(t *testing.T) {
 
 func Test_sortDecisionByConfidence1(t *testing.T) {
 	type args struct {
-		decisions      []collection.Decision
+		decisions      []structs.Decision
 		confidenceData []float64
 	}
 	tests := []struct {
 		name                 string
 		args                 args
-		wantSortedDecisions  []collection.Decision
+		wantSortedDecisions  []structs.Decision
 		wantSortedConfidence []float64
 	}{
 		{
 			name: "normal",
 			args: args{
-				decisions: []collection.Decision{
+				decisions: []structs.Decision{
 					{
 						Put: 1.0,
 					},
@@ -68,7 +68,7 @@ func Test_sortDecisionByConfidence1(t *testing.T) {
 				},
 				confidenceData: []float64{3, 2, 1},
 			},
-			wantSortedDecisions: []collection.Decision{
+			wantSortedDecisions: []structs.Decision{
 				{
 					Put: 3.0,
 				},
@@ -84,7 +84,7 @@ func Test_sortDecisionByConfidence1(t *testing.T) {
 		{
 			name: "with nil decision",
 			args: args{
-				decisions: []collection.Decision{
+				decisions: []structs.Decision{
 					{
 						Put: 1.0,
 					},
@@ -95,7 +95,7 @@ func Test_sortDecisionByConfidence1(t *testing.T) {
 				},
 				confidenceData: []float64{3, 0, 1},
 			},
-			wantSortedDecisions: []collection.Decision{
+			wantSortedDecisions: []structs.Decision{
 				{},
 				{
 					Put: 3.0,

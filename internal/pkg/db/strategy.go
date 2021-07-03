@@ -1,14 +1,14 @@
 package db
 
 import (
-	"KaiJi-Casino/internal/pkg/db/collection"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name collection.StrategyName, meta *primitive.ObjectID, properties map[string]interface{}) (strategy collection.StrategyData, err error) {
-	strategy = collection.StrategyData{
+func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name structs.StrategyName, meta *primitive.ObjectID, properties map[string]interface{}) (strategy structs.StrategyData, err error) {
+	strategy = structs.StrategyData{
 		GamblerId:  gamblerId,
 		Name:       name,
 		Meta:       meta,
@@ -26,12 +26,12 @@ func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name collection.St
 	return
 }
 
-func (c client) CreateMetaStrategy(metasStrategy collection.StrategyMeta) (err error) {
+func (c client) CreateMetaStrategy(metasStrategy structs.StrategyMeta) (err error) {
 	_, err = c.StrategyMeta.InsertOne(nil, metasStrategy)
 	return
 }
 
-func (c client) GetStrategyData(gamblerId *primitive.ObjectID) (strategy collection.StrategyData, err error) {
+func (c client) GetStrategyData(gamblerId *primitive.ObjectID) (strategy structs.StrategyData, err error) {
 	filter := bson.M{
 		"gambler_id": gamblerId,
 	}
@@ -41,7 +41,7 @@ func (c client) GetStrategyData(gamblerId *primitive.ObjectID) (strategy collect
 	return
 }
 
-func (c client) GetStrategyMetaData(name collection.StrategyName) (strategyMeta collection.StrategyMeta, err error) {
+func (c client) GetStrategyMetaData(name structs.StrategyName) (strategyMeta structs.StrategyMeta, err error) {
 	filter := bson.M{
 		"name": name,
 	}

@@ -4,8 +4,8 @@ import (
 	"KaiJi-Casino/internal/pkg/casino"
 	"KaiJi-Casino/internal/pkg/configs"
 	"KaiJi-Casino/internal/pkg/db"
-	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 	"gopkg.in/yaml.v3"
@@ -65,7 +65,7 @@ var (
 	}
 )
 
-func readSchema(path string, initialMoney float64) (schema collection.Simulation) {
+func readSchema(path string, initialMoney float64) (schema structs.Simulation) {
 	file, err := os.Open(path)
 	if err != nil {
 		panic(err)
@@ -85,8 +85,8 @@ func readSchema(path string, initialMoney float64) (schema collection.Simulation
 	return
 }
 
-func validateSchema(schema collection.Simulation) bool {
-	for s, _ := range schema.StrategySchema {
+func validateSchema(schema structs.Simulation) bool {
+	for s := range schema.StrategySchema {
 		if _, exist := strategy.NameMap[s]; !exist {
 			log.Error("unsupported schema: ", s)
 			return false

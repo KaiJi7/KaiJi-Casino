@@ -2,18 +2,18 @@ package confidenceBase
 
 import (
 	"KaiJi-Casino/internal/pkg/banker"
-	"KaiJi-Casino/internal/pkg/db/collection"
 	"KaiJi-Casino/internal/pkg/strategy/common"
+	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 )
 
 type Strategy struct {
-	collection.StrategyData
+	structs.StrategyData
 	confidenceType common.ConfidenceType
 	threshold      float64
 }
 
-func New(data collection.StrategyData) common.Strategy {
+func New(data structs.StrategyData) common.Strategy {
 
 	cts := data.Properties["confidence_type"].(string)
 	ct := common.ConfidenceType(cts)
@@ -29,11 +29,11 @@ func New(data collection.StrategyData) common.Strategy {
 	}
 }
 
-func (s Strategy) TargetGameType() []collection.GameType {
-	return []collection.GameType{collection.GameTypeAll}
+func (s Strategy) TargetGameType() []structs.GameType {
+	return []structs.GameType{structs.GameTypeAll}
 }
 
-func (s Strategy) MakeDecision(gambles []collection.Gambling) (decisions []collection.Decision) {
+func (s Strategy) MakeDecision(gambles []structs.Gambling) (decisions []structs.Decision) {
 	for _, gamble := range gambles {
 		betsInfo, err := banker.New().GetBettings(gamble.Id)
 		if err != nil {
@@ -44,7 +44,7 @@ func (s Strategy) MakeDecision(gambles []collection.Gambling) (decisions []colle
 		for _, bets := range betsInfo {
 			side, confidence := common.GetConfidence(bets, s.confidenceType)
 			if s.threshold < confidence {
-				decision := collection.Decision{
+				decision := structs.Decision{
 					StrategyId: s.Id,
 					GambleId:   gamble.Id,
 					Bet:        side,
@@ -57,14 +57,14 @@ func (s Strategy) MakeDecision(gambles []collection.Gambling) (decisions []colle
 	return
 }
 
-func (s Strategy) OnWin(decision collection.Decision) {
+func (s Strategy) OnWin(decision structs.Decision) {
 
 }
 
-func (s Strategy) OnLose(decision collection.Decision) {
+func (s Strategy) OnLose(decision structs.Decision) {
 
 }
 
-func (s Strategy) OnTie(decision collection.Decision) {
+func (s Strategy) OnTie(decision structs.Decision) {
 
 }
