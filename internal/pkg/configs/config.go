@@ -3,15 +3,14 @@ package configs
 import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v2"
-	"os"
+	"github.com/spf13/viper"
 	"runtime"
 	"strings"
 	"sync"
 )
 
 var (
-	defaultConfigPath = "configs/config.yaml"
+	configFolder = "configs"
 )
 
 type config struct {
@@ -42,22 +41,23 @@ var (
 	instance *config
 )
 
+func load(filename string, config interface{}) {
+	viper.SetConfigName(filename)
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatal("fail to load config file: ", err.Error())
+	}
+	if err := viper.Unmarshal(&config); err != nil {
+		log.Fatal("fail to decode config: ", err.Error())
+	}
+	return
+}
+
 func New() *config {
 	once.Do(func() {
-		configPath := os.Getenv("CONFIG_PATH")
-		if configPath == "" {
-			configPath = defaultConfigPath
-		}
+		viper.SetConfigType("yaml")
+		viper.AddConfigPath(configFolder)
+		load("config", &instance)
 
-		file, err := os.Open(configPath)
-		if err != nil {
-			panic(err)
-		}
-		defer file.Close()
-		d := yaml.NewDecoder(file)
-		if err := d.Decode(&instance); err != nil {
-			panic(err)
-		}
 		instance.initLog()
 
 		if instance.Mongo.Username != "" && instance.Mongo.Password != "" {
@@ -78,7 +78,6 @@ func (c *config) initLog() {
 		"WARN":  log.WarnLevel,
 		"ERROR": log.ErrorLevel,
 		"FATAL": log.FatalLevel,
-		"PANIC": log.PanicLevel,
 	}
 
 	callerFormatter := func(path string) string {
@@ -97,8 +96,4 @@ func (c *config) initLog() {
 	log.SetFormatter(customFormatter)
 	log.SetReportCaller(true)
 	log.Debug("logger initialized")
-}
-
-func SetConfigPath(path string) {
-	defaultConfigPath = path
 }
