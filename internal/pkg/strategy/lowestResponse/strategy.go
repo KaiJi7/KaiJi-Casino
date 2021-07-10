@@ -3,7 +3,6 @@ package lowestResponse
 import (
 	"KaiJi-Casino/internal/pkg/strategy/common"
 	"github.com/KaiJi7/common/structs"
-	log "github.com/sirupsen/logrus"
 )
 
 const defaultLowestOdds = 10.0
@@ -25,11 +24,6 @@ func (s Strategy) TargetGameType() []structs.GameType {
 func (s Strategy) MakeDecision(gambles []structs.Gambling) (decision []structs.Decision) {
 	var lowestOdds = defaultLowestOdds
 	for _, gamble := range gambles {
-		if !gamble.Betable() {
-			log.Info("unbetable gamble: ", gamble.Id.Hex())
-			continue
-		}
-
 		if *gamble.SortedOdds()[0].Odds < lowestOdds {
 			lowestOdds = *gamble.SortedOdds()[0].Odds
 			decision = []structs.Decision{

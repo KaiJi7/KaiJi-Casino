@@ -3,7 +3,6 @@ package lowerResponse
 import (
 	"KaiJi-Casino/internal/pkg/strategy/common"
 	"github.com/KaiJi7/common/structs"
-	log "github.com/sirupsen/logrus"
 )
 
 type Strategy struct {
@@ -23,11 +22,6 @@ func (s Strategy) TargetGameType() []structs.GameType {
 func (s Strategy) MakeDecision(gambles []structs.Gambling) []structs.Decision {
 	decisions := make([]structs.Decision, 0)
 	for _, gamble := range gambles {
-		if !gamble.Betable() {
-			log.Info("unbetable gamble: ", gamble.Id.Hex())
-			continue
-		}
-
 		decision := structs.Decision{
 			StrategyId: s.Id,
 			GambleId:   gamble.Id,

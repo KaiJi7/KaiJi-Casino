@@ -51,7 +51,7 @@ func (g *Gambler) play(games []structs.SportsGameInfo) {
 	// get gambles info
 	gambles := make([]structs.Gambling, 0)
 	for _, game := range games {
-		gambles = append(gambles, banker.New().GetGambles(game.Id)...)
+		gambles = append(gambles, banker.New().GetGambles(game.Id, true)...)
 	}
 
 	// make decision
