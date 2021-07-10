@@ -77,11 +77,10 @@ func (b banker) GetGambles(gameId *primitive.ObjectID, betableOnly bool) []struc
 	}
 
 	// filter out betable gambles
-	var betableGambles = make([]structs.Gambling, len(gambles))
-	copy(betableGambles, gambles)
-	for i, gamble := range gambles {
-		if !gamble.Betable() {
-			betableGambles = removeGamble(betableGambles, i)
+	var betableGambles []structs.Gambling
+	for _, gamble := range gambles {
+		if gamble.Betable() {
+			betableGambles = append(betableGambles, gamble)
 		}
 	}
 	return betableGambles
@@ -95,9 +94,4 @@ func (b banker) GetBettings(gamblingId *primitive.ObjectID) (bets []structs.Bett
 	}
 
 	return db.New().GetBets(filter, nil)
-}
-
-func removeGamble(s []structs.Gambling, i int) []structs.Gambling {
-	s[len(s)-1], s[i] = s[i], s[len(s)-1]
-	return s[:len(s)-1]
 }
