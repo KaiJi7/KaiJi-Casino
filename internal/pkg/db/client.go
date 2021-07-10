@@ -9,7 +9,6 @@ import (
 )
 
 type client struct {
-	*mongo.Client
 	User          *mongo.Collection
 	Decision      *mongo.Collection
 	Game          *mongo.Collection
@@ -31,11 +30,15 @@ func New() *client {
 	once.Do(func() {
 		c, err := mongo.Connect(nil, options.Client().ApplyURI(configs.New().Mongo.ConnectionString))
 		if err != nil {
-			panic(err)
+			log.Fatal(err.Error())
+			return
+		}
+		if err := c.Ping(nil, nil); err != nil {
+			log.Fatal(err.Error())
 		}
 		db := c.Database(configs.New().Mongo.Db)
 		instance = &client{
-			Client:        c,
+			//Client:        c,
 			User:          db.Collection("user"),
 			Game:          db.Collection("game"),
 			Decision:      db.Collection("decision"),
@@ -47,9 +50,7 @@ func New() *client {
 			StrategyMeta:  db.Collection("strategy_meta"),
 			Simulation:    db.Collection("simulation"),
 		}
-		if err := instance.Ping(nil, nil); err != nil {
-			panic(err)
-		}
+
 		log.Debug("mongo client initialized")
 	})
 	return instance

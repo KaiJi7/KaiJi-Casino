@@ -58,7 +58,7 @@ func (b banker) GetGames(gameType structs.GameType, begin time.Time, end time.Ti
 	return games
 }
 
-func (b banker) GetGambles(gameId *primitive.ObjectID) []structs.Gambling {
+func (b banker) GetGambles(gameId *primitive.ObjectID, betableOnly bool) []structs.Gambling {
 	log.Debug("get gambles")
 
 	filter := bson.M{
@@ -71,7 +71,19 @@ func (b banker) GetGambles(gameId *primitive.ObjectID) []structs.Gambling {
 		return nil
 	}
 
-	return gambles
+	// return gambles with unbetables
+	if !betableOnly {
+		return gambles
+	}
+
+	// filter out betable gambles
+	var betableGambles []structs.Gambling
+	for _, gamble := range gambles {
+		if gamble.Betable() {
+			betableGambles = append(betableGambles, gamble)
+		}
+	}
+	return betableGambles
 }
 
 func (b banker) GetBettings(gamblingId *primitive.ObjectID) (bets []structs.Betting, err error) {
