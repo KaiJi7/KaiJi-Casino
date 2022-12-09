@@ -5,16 +5,16 @@ import (
 	"sync"
 )
 
-type banker struct{}
+type Banker struct{}
 
 var (
 	once     sync.Once
-	instance *banker
+	instance *Banker
 )
 
-func New() *banker {
+func New() *Banker {
 	once.Do(func() {
-		instance = &banker{}
+		instance = &Banker{}
 		log.Debug("banker initialized")
 	})
 	return instance

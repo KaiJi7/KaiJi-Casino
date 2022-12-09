@@ -14,7 +14,7 @@ type Judge struct {
 	Reward     float64
 }
 
-func (b banker) Judge(decision structs.Decision) (judge Judge, err error) {
+func (b Banker) Judge(decision structs.Decision) (judge Judge, err error) {
 	log.Debug("judge")
 
 	gambling, err := db.New().GetGambling(decision.GambleId)
@@ -42,7 +42,7 @@ func (b banker) Judge(decision structs.Decision) (judge Judge, err error) {
 	return
 }
 
-func (b banker) gamblingResult(gambling structs.Gambling) (result structs.Bet, odds float64, err error) {
+func (b Banker) gamblingResult(gambling structs.Gambling) (result structs.Bet, odds float64, err error) {
 	log.Debug("get gambling result: ", gambling.Id)
 
 	game, err := db.New().GetGame(gambling.GameId)

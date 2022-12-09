@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func (b banker) GetTodayGames(gameType structs.GameType) []structs.SportsGameInfo {
+func (b Banker) GetTodayGames(gameType structs.GameType) []structs.SportsGameInfo {
 	log.Debug("get today games")
 
 	filter := bson.M{
@@ -28,7 +28,7 @@ func (b banker) GetTodayGames(gameType structs.GameType) []structs.SportsGameInf
 	return games
 }
 
-func (b banker) GetGames(gameType structs.GameType, begin time.Time, end time.Time) []structs.SportsGameInfo {
+func (b Banker) GetGames(gameType structs.GameType, begin time.Time, end time.Time) []structs.SportsGameInfo {
 	log.Debug("get games")
 
 	var filter bson.M
@@ -58,7 +58,7 @@ func (b banker) GetGames(gameType structs.GameType, begin time.Time, end time.Ti
 	return games
 }
 
-func (b banker) GetGambles(gameId *primitive.ObjectID, betableOnly bool) []structs.Gambling {
+func (b Banker) GetGambles(gameId *primitive.ObjectID, betableOnly bool) []structs.Gambling {
 	log.Debug("get gambles")
 
 	filter := bson.M{
@@ -86,7 +86,7 @@ func (b banker) GetGambles(gameId *primitive.ObjectID, betableOnly bool) []struc
 	return betableGambles
 }
 
-func (b banker) GetBettings(gamblingId *primitive.ObjectID) (bets []structs.Betting, err error) {
+func (b Banker) GetBettings(gamblingId *primitive.ObjectID) (bets []structs.Betting, err error) {
 	log.Debug("get bets")
 
 	filter := bson.M{
