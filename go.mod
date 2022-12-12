@@ -1,9 +1,9 @@
 module KaiJi-Casino
 
-go 1.15
+go 1.18
 
 require (
-	github.com/KaiJi7/common v0.0.0-20210703165909-cd249d006ca2
+	github.com/KaiJi7/common v0.0.0-20221212183135-14e4288daf61
 	github.com/allegro/bigcache v1.2.1
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect

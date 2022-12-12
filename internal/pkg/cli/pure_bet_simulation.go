@@ -35,7 +35,7 @@ var (
 			Usage:   "Number of players",
 			Value:   100,
 		},
-		&cli.IntFlag{
+		&cli.Float64Flag{
 			Name:    "money",
 			Aliases: []string{"m"},
 			Usage:   "Initial money for each player",
