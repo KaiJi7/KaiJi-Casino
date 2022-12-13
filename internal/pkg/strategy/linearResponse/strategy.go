@@ -75,5 +75,8 @@ func (s *Strategy) OnTie(decision structs.Decision) {
 }
 
 func (s *Strategy) getPut() float64 {
+	if s.lostCount == 0 {
+		return 1
+	}
 	return math.Ceil(float64(s.lostCount*(s.lostCount+1)) / (2 * (s.slope - 1)))
 }
