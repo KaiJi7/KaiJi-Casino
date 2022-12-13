@@ -53,6 +53,19 @@ var (
 				},
 			},
 		},
+		{
+			Name:        structs.StrategyNameLinearResponse,
+			Description: "Like double bet, but calculate next put based on the given slope.",
+			Properties: []struct {
+				Name string `json:"name" bson:"name"`
+				Type string `json:"type" bson:"type"` // int, float, string
+			}{
+				{
+					Name: "slope",
+					Type: "float",
+				},
+			},
+		},
 	}
 
 	createMetaStrategy = &cli.Command{

@@ -4,6 +4,7 @@ import (
 	"KaiJi-Casino/internal/pkg/db"
 	"KaiJi-Casino/internal/pkg/strategy/common"
 	"KaiJi-Casino/internal/pkg/strategy/confidenceBase"
+	"KaiJi-Casino/internal/pkg/strategy/linearResponse"
 	"KaiJi-Casino/internal/pkg/strategy/lowerResponse"
 	"KaiJi-Casino/internal/pkg/strategy/lowestResponse"
 	"KaiJi-Casino/internal/pkg/strategy/mostConfidence"
@@ -17,6 +18,7 @@ var NameMap = map[structs.StrategyName]func(data structs.StrategyData) common.St
 	structs.StrategyNameLowestResponse: lowestResponse.New,
 	structs.StrategyNameConfidenceBase: confidenceBase.New,
 	structs.StrategyNameMostConfidence: mostConfidence.New,
+	structs.StrategyNameLinearResponse: linearResponse.New,
 }
 
 func GenStrategy(strategyData structs.StrategyData) (strategy common.Strategy, err error) {

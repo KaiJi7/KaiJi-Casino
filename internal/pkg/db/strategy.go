@@ -5,9 +5,10 @@ import (
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name structs.StrategyName, meta *primitive.ObjectID, properties map[string]interface{}) (strategy structs.StrategyData, err error) {
+func (c *client) CreateStrategy(gamblerId *primitive.ObjectID, name structs.StrategyName, meta *primitive.ObjectID, properties map[string]interface{}) (strategy structs.StrategyData, err error) {
 	strategy = structs.StrategyData{
 		GamblerId:  gamblerId,
 		Name:       name,
@@ -26,12 +27,15 @@ func (c client) CreateStrategy(gamblerId *primitive.ObjectID, name structs.Strat
 	return
 }
 
-func (c client) CreateMetaStrategy(metasStrategy structs.StrategyMeta) (err error) {
-	_, err = c.StrategyMeta.InsertOne(nil, metasStrategy)
+func (c *client) CreateMetaStrategy(metasStrategy structs.StrategyMeta) (err error) {
+	filter := bson.M{"name": metasStrategy.Name}
+	update := bson.M{"$set": metasStrategy}
+	opts := options.Update().SetUpsert(true)
+	_, err = c.StrategyMeta.UpdateOne(nil, filter, update, opts)
 	return
 }
 
-func (c client) GetStrategyData(gamblerId *primitive.ObjectID) (strategy structs.StrategyData, err error) {
+func (c *client) GetStrategyData(gamblerId *primitive.ObjectID) (strategy structs.StrategyData, err error) {
 	filter := bson.M{
 		"gambler_id": gamblerId,
 	}
@@ -41,7 +45,7 @@ func (c client) GetStrategyData(gamblerId *primitive.ObjectID) (strategy structs
 	return
 }
 
-func (c client) GetStrategyMetaData(name structs.StrategyName) (strategyMeta structs.StrategyMeta, err error) {
+func (c *client) GetStrategyMetaData(name structs.StrategyName) (strategyMeta structs.StrategyMeta, err error) {
 	filter := bson.M{
 		"name": name,
 	}

@@ -18,7 +18,7 @@ func (g getDecisionFilter) toBson() (filter bson.M) {
 	return
 }
 
-func (c client) GetDecisions(strategyId *primitive.ObjectID, gambleId *primitive.ObjectID) (decisions []structs.Decision, err error) {
+func (c *client) GetDecisions(strategyId *primitive.ObjectID, gambleId *primitive.ObjectID) (decisions []structs.Decision, err error) {
 	filter := getDecisionFilter{
 		StrategyId: strategyId,
 		GambleId:   gambleId,
@@ -37,7 +37,7 @@ func (c client) GetDecisions(strategyId *primitive.ObjectID, gambleId *primitive
 	return
 }
 
-func (c client) SaveDecision(decision structs.Decision) (document structs.Decision, err error) {
+func (c *client) SaveDecision(decision structs.Decision) (document structs.Decision, err error) {
 	res, dbErr := c.Decision.InsertOne(nil, decision)
 	if dbErr != nil {
 		log.Error("fail to insert document: ", dbErr.Error())
@@ -50,7 +50,7 @@ func (c client) SaveDecision(decision structs.Decision) (document structs.Decisi
 	return
 }
 
-//func (c client) SaveDecisions(decisions []interface{}) (err error) {
+//func (c *client) SaveDecisions(decisions []interface{}) (err error) {
 //	_, err = c.Decision.InsertMany(nil, decisions)
 //	return
 //}

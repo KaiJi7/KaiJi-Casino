@@ -61,7 +61,7 @@ func (g *Gambler) play(games []structs.SportsGameInfo) {
 	g.handleDecision(decisions)
 }
 
-func (g Gambler) OnBroken() {
+func (g *Gambler) OnBroken() {
 	log.Info("gambler: ", g.Id.Hex(), ". was broken.")
 	brokenChan <- true
 	return
