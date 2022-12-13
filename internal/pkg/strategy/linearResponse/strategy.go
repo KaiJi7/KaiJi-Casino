@@ -17,7 +17,8 @@ type Strategy struct {
 	slope     float64
 }
 
-func New(data structs.StrategyData, slope float64) common.Strategy {
+func New(data structs.StrategyData) common.Strategy {
+	slope := data.GetProperty("slope").(float64)
 	if slope == 0 {
 		slope = defaultSlope
 	}

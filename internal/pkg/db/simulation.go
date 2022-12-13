@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (c client) CreateSimulation(simulation structs.Simulation) (document structs.Simulation, err error) {
+func (c *client) CreateSimulation(simulation structs.Simulation) (document structs.Simulation, err error) {
 	res, dbErr := c.Simulation.InsertOne(nil, simulation)
 	if dbErr != nil {
 		log.Error("fail to insert simulation: ", dbErr.Error())

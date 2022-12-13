@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func (c client) CreateGambler(simulationId *primitive.ObjectID, moneyBegin float64) (gambler structs.GamblerData, err error) {
+func (c *client) CreateGambler(simulationId *primitive.ObjectID, moneyBegin float64) (gambler structs.GamblerData, err error) {
 	gambler = structs.GamblerData{
 		SimulationId: simulationId,
 		MoneyBegin:   moneyBegin,
@@ -23,7 +23,7 @@ func (c client) CreateGambler(simulationId *primitive.ObjectID, moneyBegin float
 	return
 }
 
-func (c client) ListGambler(simulationId *primitive.ObjectID) (gamblers []structs.GamblerData, err error) {
+func (c *client) ListGambler(simulationId *primitive.ObjectID) (gamblers []structs.GamblerData, err error) {
 	filter := bson.M{
 		"simulation_id": simulationId,
 	}

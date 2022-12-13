@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (c client) GetGame(gameId *primitive.ObjectID) (game structs.SportsGameResult, err error) {
+func (c *client) GetGame(gameId *primitive.ObjectID) (game structs.SportsGameResult, err error) {
 	log.Debug("get game: ", gameId.Hex())
 
 	filter := bson.M{
@@ -19,7 +19,7 @@ func (c client) GetGame(gameId *primitive.ObjectID) (game structs.SportsGameResu
 	return
 }
 
-func (c client) GetGamesInfo(filter bson.M, option *options.FindOptions) (documents []structs.SportsGameInfo, err error) {
+func (c *client) GetGamesInfo(filter bson.M, option *options.FindOptions) (documents []structs.SportsGameInfo, err error) {
 	log.Debug("query games info from db")
 
 	cursor, dbErr := c.Game.Find(nil, filter, option)
@@ -34,7 +34,7 @@ func (c client) GetGamesInfo(filter bson.M, option *options.FindOptions) (docume
 	return
 }
 
-func (c client) GetGamesResult(filter bson.M, option *options.FindOptions) (documents []structs.SportsGameResult, err error) {
+func (c *client) GetGamesResult(filter bson.M, option *options.FindOptions) (documents []structs.SportsGameResult, err error) {
 	log.Debug("query games result from db: ", filter)
 
 	cursor, dbErr := c.Game.Find(nil, filter, option)

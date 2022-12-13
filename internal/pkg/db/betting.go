@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (c client) GetBets(filter bson.M, option *options.FindOptions) (documents []structs.Betting, err error) {
+func (c *client) GetBets(filter bson.M, option *options.FindOptions) (documents []structs.Betting, err error) {
 	log.Debug("get gambles")
 
 	cursor, dbErr := c.Betting.Find(nil, filter, option)

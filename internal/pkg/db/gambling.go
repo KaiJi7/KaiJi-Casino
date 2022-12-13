@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func (c client) GetGambling(gamblingId *primitive.ObjectID) (gambling structs.Gambling, err error) {
+func (c *client) GetGambling(gamblingId *primitive.ObjectID) (gambling structs.Gambling, err error) {
 	log.Debug("get gambling: ", gamblingId.Hex())
 	filter := bson.M{
 		"_id": gamblingId,
@@ -17,7 +17,7 @@ func (c client) GetGambling(gamblingId *primitive.ObjectID) (gambling structs.Ga
 	return
 }
 
-func (c client) GetGambles(filter bson.M, option *options.FindOptions) (documents []structs.Gambling, err error) {
+func (c *client) GetGambles(filter bson.M, option *options.FindOptions) (documents []structs.Gambling, err error) {
 	log.Debug("get gambles")
 
 	cursor, dbErr := c.Gambling.Find(nil, filter, option)

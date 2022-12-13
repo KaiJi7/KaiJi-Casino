@@ -17,3 +17,8 @@ mostConfidence:
     properties:
       threshold: 0.8
       limit: 3
+
+linearResponse:
+  - quantity: 10
+    properties:
+      slope: 1.75
