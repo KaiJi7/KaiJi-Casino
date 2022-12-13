@@ -23,7 +23,8 @@ func (g *Gambler) makeDecision(gambles []structs.Gambling) (decisions []structs.
 			decisions = append(decisions, decision)
 		} else {
 			log.Info("not enough money to bet decision: ", decision.String())
-			continue
+			g.IsBroken = true
+			break
 		}
 	}
 
