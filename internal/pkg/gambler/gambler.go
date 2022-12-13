@@ -37,7 +37,7 @@ func (g *Gambler) PlaySince(wg *sync.WaitGroup, days int) {
 			return
 		default:
 			for _, tg := range g.Strategy.TargetGameType() {
-				gamesToGamble = append(gamesToGamble, banker.New().GetGames(tg, time.Now().AddDate(0, 0, d), time.Now())...)
+				gamesToGamble = append(gamesToGamble, banker.New().GetGames(tg, time.Now().AddDate(0, 0, d), time.Now().AddDate(0, 0, d+1))...)
 			}
 		}
 
