@@ -14,13 +14,10 @@ const (
 	BrokenThreshold = 1.0
 )
 
-var (
-	brokenChan = make(chan bool, 1)
-)
-
 type Gambler struct {
 	structs.GamblerData
 	Strategy common.Strategy
+	IsBroken bool
 }
 
 // PlaySince plays gamble with latest n days game
@@ -29,17 +26,21 @@ func (g *Gambler) PlaySince(wg *sync.WaitGroup, days int) {
 
 	// for each day since n days before
 	for d := -days; d < 0; d++ {
-		gamesToGamble := make([]structs.SportsGameInfo, 0)
-
-		select {
-		case <-brokenChan:
-			log.Info(fmt.Sprintf("gambler %s was broken, stop playing and return", g.Id.Hex()))
+		if g.IsBroken {
+			log.Info(fmt.Sprintf("gamble %s was broken", g.Id.Hex()))
 			return
-		default:
-			for _, tg := range g.Strategy.TargetGameType() {
-				gamesToGamble = append(gamesToGamble, banker.New().GetGames(tg, time.Now().AddDate(0, 0, d), time.Now().AddDate(0, 0, d+1))...)
-			}
 		}
+		gamesToGamble := make([]structs.SportsGameInfo, 0)
+		for _, tg := range g.Strategy.TargetGameType() {
+			gamesToGamble = append(gamesToGamble, banker.New().GetGames(tg, time.Now().AddDate(0, 0, d), time.Now().AddDate(0, 0, d+1))...)
+		}
+		//select {
+		//case <-brokenChan:
+		//	log.Info(fmt.Sprintf("gambler %s was broken, stop playing and return", g.Id.Hex()))
+		//	return
+		//default:
+		//
+		//}
 
 		g.play(gamesToGamble)
 	}
@@ -63,6 +64,6 @@ func (g *Gambler) play(games []structs.SportsGameInfo) {
 
 func (g *Gambler) OnBroken() {
 	log.Info("gambler: ", g.Id.Hex(), ". was broken.")
-	brokenChan <- true
+	g.IsBroken = true
 	return
 }

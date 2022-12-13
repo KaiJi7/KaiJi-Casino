@@ -3,7 +3,7 @@ module KaiJi-Casino
 go 1.18
 
 require (
-	github.com/KaiJi7/common v0.0.0-20221212183844-ad6a95b1bcd1
+	github.com/KaiJi7/common v0.0.0-20221213164809-661bb3990a15
 	github.com/allegro/bigcache v1.2.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.8.1

@@ -5,6 +5,8 @@ import (
 	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"math"
+	"math/rand"
+	"time"
 )
 
 const (
@@ -15,6 +17,7 @@ type Strategy struct {
 	structs.StrategyData
 	lostCount int
 	slope     float64
+	lastPut   float64
 }
 
 func New(data structs.StrategyData) common.Strategy {
@@ -25,6 +28,7 @@ func New(data structs.StrategyData) common.Strategy {
 	return &Strategy{
 		StrategyData: data,
 		slope:        slope,
+		lastPut:      1,
 	}
 }
 
@@ -33,31 +37,31 @@ func (s *Strategy) TargetGameType() []structs.GameType {
 }
 
 func (s *Strategy) MakeDecision(gambles []structs.Gambling) []structs.Decision {
-	//decisions := make([]structs.Decision, 1)
-	//for _, gamble := range gambles {
-	//	decision := structs.Decision{
-	//		StrategyId: s.Id,
-	//		GambleId:   gamble.Id,
-	//		Bet:        gamble.SortedOdds()[0].Bet,
-	//		Put:        s.getPut(),
-	//	}
-	//	//decisions = append(decisions, decision)
-	//	decisions[0] = decision
-	//	break
-	//}
-
-	//return decisions
-
 	if len(gambles) == 0 {
 		return nil
 	}
 
+	// filter out original and unknown
+	gambles = func() (gs []structs.Gambling) {
+		for _, g := range gambles {
+			if g.Type == structs.GamblingTypeSpreadPoint || g.Type == structs.GamblingTypeTotalScore {
+				gs = append(gs, g)
+			}
+		}
+		return
+	}()
+
+	// random pick gamble and odds
+	rand.Seed(time.Now().UnixNano())
+	gamble := gambles[rand.Intn(len(gambles))]
+	odds := gamble.Odds[rand.Intn(len(gamble.Odds))]
+	s.lastPut = s.getPut(*odds.Odds)
 	return []structs.Decision{
 		{
 			StrategyId: s.Id,
-			GambleId:   gambles[0].Id,
-			Bet:        gambles[0].SortedOdds()[0].Bet,
-			Put:        s.getPut(),
+			GambleId:   gamble.Id,
+			Bet:        odds.Bet,
+			Put:        s.lastPut,
 		},
 	}
 }
@@ -74,9 +78,11 @@ func (s *Strategy) OnTie(decision structs.Decision) {
 	log.Warn("unhandled on tie")
 }
 
-func (s *Strategy) getPut() float64 {
+func (s *Strategy) getPut(odds float64) float64 {
 	if s.lostCount == 0 {
 		return 1
 	}
-	return math.Ceil(float64(s.lostCount*(s.lostCount+1)) / (2 * (s.slope - 1)))
+
+	return math.Ceil(float64(s.lastPut*(s.lastPut+4))/2*(odds-1) + s.lastPut*(s.slope-1)/(odds-1))
+	//return math.Ceil(float64(s.lostCount*(s.lostCount+1)) * (s.slope - 1) / (2 * (odds - 1)))
 }
