@@ -42,8 +42,8 @@ func (g *Gambler) handleDecision(decisions []structs.Decision) {
 		}
 
 		hist := structs.GambleHistory{
-			DecisionId: decision.Id,
-			Winner: judge.Winner,
+			DecisionId:  decision.Id,
+			Winner:      judge.Winner,
 			MoneyBefore: g.MoneyCurrent,
 		}
 
@@ -53,11 +53,10 @@ func (g *Gambler) handleDecision(decisions []structs.Decision) {
 			g.Strategy.OnWin(decision)
 
 		case structs.GambleWinnerBanker:
+			g.Strategy.OnLose(decision)
 			if g.MoneyCurrent < BrokenThreshold {
 				g.OnBroken()
-				continue
 			}
-			g.Strategy.OnLose(decision)
 
 		case structs.GambleWinnerTie:
 			g.Strategy.OnTie(decision)
@@ -72,6 +71,11 @@ func (g *Gambler) handleDecision(decisions []structs.Decision) {
 		if err := db.New().SaveHistory(hist); err != nil {
 			log.Error("fail to save gamble history: ", err.Error())
 		}
+
+		if g.IsBroken {
+			break
+		}
+
 	}
 	return
 }
