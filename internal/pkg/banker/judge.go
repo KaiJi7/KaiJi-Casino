@@ -6,6 +6,7 @@ import (
 	"github.com/KaiJi7/common/structs"
 	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"math"
 )
 
 type Judge struct {
@@ -34,7 +35,7 @@ func (b Banker) Judge(decision structs.Decision) (judge Judge, err error) {
 	// TODO: consider tie
 	if res == decision.Bet {
 		judge.Winner = structs.GambleWinnerGambler
-		judge.Reward = odds * decision.Put
+		judge.Reward = math.Round(odds * decision.Put)
 	} else {
 		judge.Winner = structs.GambleWinnerBanker
 		judge.Reward = 0
