@@ -83,13 +83,11 @@ func (s *Strategy) OnTie(decision structs.Decision) {
 }
 
 func (s *Strategy) getPut(odds float64) float64 {
+	log.Debug(fmt.Sprintf("last put: %f, odds: %f", s.lastPut, odds))
+
 	if s.loseCount == 0 {
 		return 1
 	}
-
-	log.Debug(fmt.Sprintf("last put: %f, odds: %f", s.lastPut, odds))
-
-	//return math.Ceil(float64(s.lastPut*(s.lastPut+4))/2*(odds-1) + s.lastPut*(s.slope-1)/(odds-1))
-	//return math.Ceil(float64(s.loseCount*(s.loseCount+1)) * (s.slope - 1) / (2 * (odds - 1)))
+	
 	return math.Ceil((s.loseCount + float64(s.loseTimes)*(s.slope-1)) / (odds - 1))
 }
